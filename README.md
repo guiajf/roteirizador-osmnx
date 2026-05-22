@@ -799,8 +799,10 @@ print("\n🎉 ANÁLISE CONCLUÍDA!")
 
 ```python
 # Exibir mapa
-#mapa_final
+mapa_final
 ```
+
+![](roteiros_osmnx_clusters.png)
 
 **Considerações finais**
 
