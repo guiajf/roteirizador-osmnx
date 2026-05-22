@@ -1,0 +1,2949 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_e6a3f6376f3911aea128a1fc27e6f7ed {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    <script src="https://cdn.jsdelivr.net/gh/ljagis/leaflet-measure@2.1.7/dist/leaflet-measure.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ljagis/leaflet-measure@2.1.7/dist/leaflet-measure.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.fullscreen@3.0.0/Control.FullScreen.css"/>
+</head>
+<body>
+    
+    
+    <div style="position: fixed; bottom: 10px; right: 10px; z-index: 1000;
+                background-color: white; padding: 12px; border-radius: 8px;
+                border: 2px solid #ff6b6b; font-family: 'Segoe UI', Arial, sans-serif;
+                font-size: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                max-width: 250px;">
+        <h4 style="margin:0 0 8px 0; color:#ff6b6b;">🍺 ROTEIROS POR PROXIMIDADE</h4>
+        <b>🚶 Modo:</b> CARRO<br>
+        <b>📍 Total de bares:</b> 40<br>
+        <b>🗺️ Número de roteiros:</b> 7<br>
+        <b>📏 Distância total:</b> 35.23 km<br>
+        <b>⏱️ Tempo estimado:</b> 71 min<br>
+        <hr style="margin: 5px 0;">
+        <small>
+        🟢 Verde: Início do roteiro<br>
+        🔴 Vermelho: Fim do roteiro<br>
+        🔵 Demais cores: diferentes roteiros<br>
+        📍 Clique nos marcadores para detalhes
+        </small>
+    </div>
+    
+    
+            <div class="folium-map" id="map_e6a3f6376f3911aea128a1fc27e6f7ed" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_e6a3f6376f3911aea128a1fc27e6f7ed = L.map(
+                "map_e6a3f6376f3911aea128a1fc27e6f7ed",
+                {
+                    center: [-21.7589521225, -43.359571835],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 14,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_9d7ebb93a9688f67cc44042600336d02 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_9d7ebb93a9688f67cc44042600336d02.addTo(map_e6a3f6376f3911aea128a1fc27e6f7ed);
+        
+    
+            var tile_layer_50ad6cbf8bd8c945c8e09e6f2c37268f = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            var feature_group_fa836d6fab353410e9a9e5be2d3a90d3 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var poly_line_93c19d6c2b1f88e4f8b1c3f3d20cc706 = L.polyline(
+                [[-21.7823663, -43.2992855], [-21.7806628, -43.2983243], [-21.7775233, -43.2971951], [-21.7764747, -43.2958914], [-21.776415, -43.2957469], [-21.7758433, -43.2945074], [-21.77548, -43.2941921], [-21.7753758, -43.2941227], [-21.7749269, -43.2938307], [-21.7748098, -43.2939662], [-21.7751528, -43.294392], [-21.7735286, -43.2962179], [-21.7711591, -43.2977233], [-21.7710314, -43.2978688], [-21.7709947, -43.2980335], [-21.7710185, -43.2983124], [-21.7687522, -43.3013612], [-21.768891, -43.3018026], [-21.7703798, -43.3078949], [-21.770377, -43.3081182], [-21.770399, -43.3082503], [-21.7705349, -43.3084173], [-21.771586, -43.3093366], [-21.7733602, -43.3106738], [-21.7740601, -43.3098751], [-21.7738347, -43.30935]],
+                {"bubblingMouseEvents": true, "color": "#ff7f00", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ff7f00", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_fa836d6fab353410e9a9e5be2d3a90d3);
+        
+    
+        var popup_9906548c99592c41474cc8eae4276abd = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a1e5e5f14a2128c7482bfd9eb7e4b411 = $(`<div id="html_a1e5e5f14a2128c7482bfd9eb7e4b411" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 5</div>`)[0];
+                popup_9906548c99592c41474cc8eae4276abd.setContent(html_a1e5e5f14a2128c7482bfd9eb7e4b411);
+            
+        
+
+        poly_line_93c19d6c2b1f88e4f8b1c3f3d20cc706.bindPopup(popup_9906548c99592c41474cc8eae4276abd)
+        ;
+
+        
+    
+    
+            var marker_a54bbfe30a8ccf53d5d1cee7b2436c4d = L.marker(
+                [-21.7819995, -43.2989666],
+                {
+}
+            ).addTo(feature_group_fa836d6fab353410e9a9e5be2d3a90d3);
+        
+    
+            var icon_b93beced03dce6b22f9ebcceed6aa68a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "play",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_8d963fea6cd863c3e8d328e3655bbc9e = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ce44683b5d896c0d860f31ba0e755e25 = $(`<div id="html_ce44683b5d896c0d860f31ba0e755e25" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; width: 220px;">                     <b>ADEGA BAR</b><br>                     📍 Parada 1 de 2<br>                     🍺 Roteiro 5<br>                     📏 Distância total: 3.79 km<br>                     🚶 Modo: DRIVE                 </div>                 </div>`)[0];
+                popup_8d963fea6cd863c3e8d328e3655bbc9e.setContent(html_ce44683b5d896c0d860f31ba0e755e25);
+            
+        
+
+        marker_a54bbfe30a8ccf53d5d1cee7b2436c4d.bindPopup(popup_8d963fea6cd863c3e8d328e3655bbc9e)
+        ;
+
+        
+    
+    
+            marker_a54bbfe30a8ccf53d5d1cee7b2436c4d.bindTooltip(
+                `<div>
+                     🏁 INÍCIO: ADEGA BAR
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_a54bbfe30a8ccf53d5d1cee7b2436c4d.setIcon(icon_b93beced03dce6b22f9ebcceed6aa68a);
+            
+    
+            var marker_09cee33308eee5acd6425ce77d68a8b0 = L.marker(
+                [-21.7739006, -43.309326],
+                {
+}
+            ).addTo(feature_group_fa836d6fab353410e9a9e5be2d3a90d3);
+        
+    
+            var icon_83edc283f5510ddf98a10bf3e6568917 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "stop",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_44a62ced8a0fd95c86d54b97c6b21ab1 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_6bf84c672740c94b6dcec83b45d45b3c = $(`<div id="html_6bf84c672740c94b6dcec83b45d45b3c" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>RECANTO DOS MANACAS</b><br>                 📍 Parada 2 de 2<br>                 🍺 Roteiro 5<br>             </div>             </div>`)[0];
+                popup_44a62ced8a0fd95c86d54b97c6b21ab1.setContent(html_6bf84c672740c94b6dcec83b45d45b3c);
+            
+        
+
+        marker_09cee33308eee5acd6425ce77d68a8b0.bindPopup(popup_44a62ced8a0fd95c86d54b97c6b21ab1)
+        ;
+
+        
+    
+    
+            marker_09cee33308eee5acd6425ce77d68a8b0.bindTooltip(
+                `<div>
+                     🏁 FIM: RECANTO DOS MANACAS
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_09cee33308eee5acd6425ce77d68a8b0.setIcon(icon_83edc283f5510ddf98a10bf3e6568917);
+            
+    
+            feature_group_fa836d6fab353410e9a9e5be2d3a90d3.addTo(map_e6a3f6376f3911aea128a1fc27e6f7ed);
+        
+    
+            var feature_group_604bddd22873c4278256aeaed8e7e073 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var poly_line_9d0dbd41ba94c79e66834545ca2fe472 = L.polyline(
+                [[-21.7681275, -43.3285485], [-21.7675195, -43.3282768], [-21.7677748, -43.3273634], [-21.7671938, -43.3271079], [-21.7667042, -43.3268451], [-21.7666207, -43.3268614], [-21.7659872, -43.3284707], [-21.7657077, -43.3291958], [-21.7656385, -43.3293179], [-21.764735, -43.3314681], [-21.7645775, -43.3317274], [-21.7642834, -43.3322787], [-21.7624101, -43.3338041], [-21.7607204, -43.3361717], [-21.760387, -43.3360524], [-21.7602497, -43.3363318], [-21.7591454, -43.3380038], [-21.7589922, -43.3379604], [-21.758774, -43.3382795], [-21.757864, -43.337792], [-21.75772, -43.3373304], [-21.757677, -43.3371814], [-21.7570775, -43.3372119], [-21.7564047, -43.3372619], [-21.7553918, -43.3385153], [-21.7554736, -43.3390413], [-21.755587, -43.3398656]],
+                {"bubblingMouseEvents": true, "color": "#e41a1c", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#e41a1c", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_604bddd22873c4278256aeaed8e7e073);
+        
+    
+        var popup_cd515eea88f98dc5f177e90e30498b38 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b279f66a9f253c3b102a44a8341b416c = $(`<div id="html_b279f66a9f253c3b102a44a8341b416c" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 1</div>`)[0];
+                popup_cd515eea88f98dc5f177e90e30498b38.setContent(html_b279f66a9f253c3b102a44a8341b416c);
+            
+        
+
+        poly_line_9d0dbd41ba94c79e66834545ca2fe472.bindPopup(popup_cd515eea88f98dc5f177e90e30498b38)
+        ;
+
+        
+    
+    
+            var poly_line_51bb01e892bd79654fc0ec5cf05a2cfe = L.polyline(
+                [[-21.755587, -43.3398656], [-21.7558377, -43.340519], [-21.755922, -43.3406131], [-21.7568661, -43.3415777], [-21.7576895, -43.341141]],
+                {"bubblingMouseEvents": true, "color": "#e41a1c", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#e41a1c", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_604bddd22873c4278256aeaed8e7e073);
+        
+    
+        var popup_fc44e6112b2fae1ccf42950505b056be = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_9829bfaeef06d2e874aef922f6bcbc67 = $(`<div id="html_9829bfaeef06d2e874aef922f6bcbc67" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 1</div>`)[0];
+                popup_fc44e6112b2fae1ccf42950505b056be.setContent(html_9829bfaeef06d2e874aef922f6bcbc67);
+            
+        
+
+        poly_line_51bb01e892bd79654fc0ec5cf05a2cfe.bindPopup(popup_fc44e6112b2fae1ccf42950505b056be)
+        ;
+
+        
+    
+    
+            var poly_line_91ba3cc7c97dcda4f4c7fb09c483f698 = L.polyline(
+                [[-21.7576895, -43.341141], [-21.7582751, -43.3413197], [-21.7583515, -43.3413829], [-21.7594596, -43.3415285], [-21.7598809, -43.3411412], [-21.7604048, -43.3390892], [-21.7603884, -43.3390218], [-21.7603059, -43.338271], [-21.7610591, -43.338749], [-21.7615566, -43.3390672], [-21.7617818, -43.3394657], [-21.7616931, -43.3406492], [-21.7607616, -43.3420897], [-21.7602579, -43.3427177], [-21.7591946, -43.3441606], [-21.7590881, -43.3442782], [-21.7582321, -43.3452869], [-21.7587725, -43.3474402]],
+                {"bubblingMouseEvents": true, "color": "#e41a1c", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#e41a1c", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_604bddd22873c4278256aeaed8e7e073);
+        
+    
+        var popup_9ad93cc825f8bd882d79a177e78301b9 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_bff7ec88697c8e4c307348431872b061 = $(`<div id="html_bff7ec88697c8e4c307348431872b061" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 1</div>`)[0];
+                popup_9ad93cc825f8bd882d79a177e78301b9.setContent(html_bff7ec88697c8e4c307348431872b061);
+            
+        
+
+        poly_line_91ba3cc7c97dcda4f4c7fb09c483f698.bindPopup(popup_9ad93cc825f8bd882d79a177e78301b9)
+        ;
+
+        
+    
+    
+            var poly_line_b320130703f6fd9b67284f4ac4076a34 = L.polyline(
+                [[-21.7587725, -43.3474402], [-21.7596552, -43.3472038], [-21.7598178, -43.3469683], [-21.760514, -43.346064], [-21.7612122, -43.3451545], [-21.7616973, -43.3445255], [-21.7620425, -43.3440512], [-21.7620556, -43.3440317], [-21.7623632, -43.3440146], [-21.7633408, -43.3460872], [-21.7636501, -43.3463378], [-21.7637167, -43.3462298], [-21.7635555, -43.3461133], [-21.7634341, -43.3456573]],
+                {"bubblingMouseEvents": true, "color": "#e41a1c", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#e41a1c", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_604bddd22873c4278256aeaed8e7e073);
+        
+    
+        var popup_5eb151921c21ddb4060afa49246d3686 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_9a1ac861f2fd35f2af6622e0daa05cff = $(`<div id="html_9a1ac861f2fd35f2af6622e0daa05cff" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 1</div>`)[0];
+                popup_5eb151921c21ddb4060afa49246d3686.setContent(html_9a1ac861f2fd35f2af6622e0daa05cff);
+            
+        
+
+        poly_line_b320130703f6fd9b67284f4ac4076a34.bindPopup(popup_5eb151921c21ddb4060afa49246d3686)
+        ;
+
+        
+    
+    
+            var poly_line_ddf74386113219cf89ccde55f630e3c9 = L.polyline(
+                [[-21.7634341, -43.3456573], [-21.7632752, -43.344993], [-21.7630959, -43.3442741], [-21.7643384, -43.3439168], [-21.7645105, -43.3446557]],
+                {"bubblingMouseEvents": true, "color": "#e41a1c", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#e41a1c", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_604bddd22873c4278256aeaed8e7e073);
+        
+    
+        var popup_934bd46584203f6fea1b3b7a9b2de63b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_95e8723a0003b6365b9e1fa34437a6f6 = $(`<div id="html_95e8723a0003b6365b9e1fa34437a6f6" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 1</div>`)[0];
+                popup_934bd46584203f6fea1b3b7a9b2de63b.setContent(html_95e8723a0003b6365b9e1fa34437a6f6);
+            
+        
+
+        poly_line_ddf74386113219cf89ccde55f630e3c9.bindPopup(popup_934bd46584203f6fea1b3b7a9b2de63b)
+        ;
+
+        
+    
+    
+            var poly_line_91487b069a09fded98af080b4950790c = L.polyline(
+                [[-21.7645105, -43.3446557], [-21.7647823, -43.3458227], [-21.766348, -43.3454016], [-21.7660711, -43.3442298], [-21.7658775, -43.3434747], [-21.7668565, -43.3431933], [-21.7675786, -43.3429858], [-21.7681058, -43.3428342], [-21.7685463, -43.3427076], [-21.7687234, -43.3435072]],
+                {"bubblingMouseEvents": true, "color": "#e41a1c", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#e41a1c", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_604bddd22873c4278256aeaed8e7e073);
+        
+    
+        var popup_ef68592807367bfd4cf7e65f1bd67287 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_746815918477e7792de2238f8c15789e = $(`<div id="html_746815918477e7792de2238f8c15789e" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 1</div>`)[0];
+                popup_ef68592807367bfd4cf7e65f1bd67287.setContent(html_746815918477e7792de2238f8c15789e);
+            
+        
+
+        poly_line_91487b069a09fded98af080b4950790c.bindPopup(popup_ef68592807367bfd4cf7e65f1bd67287)
+        ;
+
+        
+    
+    
+            var poly_line_3c10318cf5100b7ff0dbf1c40320d46c = L.polyline(
+                [[-21.7687234, -43.3435072], [-21.7684043, -43.3435936], [-21.768289, -43.3436247], [-21.7679488, -43.3437168], [-21.767833, -43.3450022], [-21.7673256, -43.3451387], [-21.767732, -43.3468456], [-21.7679644, -43.3478501], [-21.7669663, -43.3481075], [-21.766321, -43.3482739], [-21.7662112, -43.3483052], [-21.7663409, -43.34846], [-21.7668421, -43.3494982], [-21.7660293, -43.3499853], [-21.7652586, -43.3501668], [-21.7644901, -43.3503622], [-21.7640695, -43.3504654], [-21.7636205, -43.3505739], [-21.7638028, -43.3513519], [-21.7642618, -43.3512153], [-21.7644581, -43.3520137], [-21.7641257, -43.3521245], [-21.7642981, -43.3525735], [-21.7645119, -43.3522554]],
+                {"bubblingMouseEvents": true, "color": "#e41a1c", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#e41a1c", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_604bddd22873c4278256aeaed8e7e073);
+        
+    
+        var popup_ee333d8d5252bcace6538b2cbbf204fa = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d21e13b55beb2ae27bbbea3bbc8a9c8e = $(`<div id="html_d21e13b55beb2ae27bbbea3bbc8a9c8e" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 1</div>`)[0];
+                popup_ee333d8d5252bcace6538b2cbbf204fa.setContent(html_d21e13b55beb2ae27bbbea3bbc8a9c8e);
+            
+        
+
+        poly_line_3c10318cf5100b7ff0dbf1c40320d46c.bindPopup(popup_ee333d8d5252bcace6538b2cbbf204fa)
+        ;
+
+        
+    
+    
+            var poly_line_3d31ab31e6a47dd640e97a012b04baf3 = L.polyline(
+                [[-21.7645119, -43.3522554], [-21.7644581, -43.3520137], [-21.7641257, -43.3521245], [-21.7642981, -43.3525735], [-21.7648197, -43.3538424], [-21.7652826, -43.3537285]],
+                {"bubblingMouseEvents": true, "color": "#e41a1c", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#e41a1c", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_604bddd22873c4278256aeaed8e7e073);
+        
+    
+        var popup_78a3b8ea2c111c348f2e283ced2c4811 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a69f9f64d10044ac67b778347ddc22e4 = $(`<div id="html_a69f9f64d10044ac67b778347ddc22e4" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 1</div>`)[0];
+                popup_78a3b8ea2c111c348f2e283ced2c4811.setContent(html_a69f9f64d10044ac67b778347ddc22e4);
+            
+        
+
+        poly_line_3d31ab31e6a47dd640e97a012b04baf3.bindPopup(popup_78a3b8ea2c111c348f2e283ced2c4811)
+        ;
+
+        
+    
+    
+            var marker_c1dbfbd95bc8301a80057f0a99a5e7dd = L.marker(
+                [-21.7683638, -43.3281789],
+                {
+}
+            ).addTo(feature_group_604bddd22873c4278256aeaed8e7e073);
+        
+    
+            var icon_b8bc6cef23409023d91e8de329db2fed = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "play",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_c3c2eac6d94e2e1699b62ea1e7d0f8be = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d3bfdc03e38fc070a6037a7869f9b703 = $(`<div id="html_d3bfdc03e38fc070a6037a7869f9b703" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; width: 220px;">                     <b>EMPORIO DO SABOR</b><br>                     📍 Parada 1 de 9<br>                     🍺 Roteiro 1<br>                     📏 Distância total: 8.48 km<br>                     🚶 Modo: DRIVE                 </div>                 </div>`)[0];
+                popup_c3c2eac6d94e2e1699b62ea1e7d0f8be.setContent(html_d3bfdc03e38fc070a6037a7869f9b703);
+            
+        
+
+        marker_c1dbfbd95bc8301a80057f0a99a5e7dd.bindPopup(popup_c3c2eac6d94e2e1699b62ea1e7d0f8be)
+        ;
+
+        
+    
+    
+            marker_c1dbfbd95bc8301a80057f0a99a5e7dd.bindTooltip(
+                `<div>
+                     🏁 INÍCIO: EMPORIO DO SABOR
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_c1dbfbd95bc8301a80057f0a99a5e7dd.setIcon(icon_b8bc6cef23409023d91e8de329db2fed);
+            
+    
+            var marker_914fddb12b8fd97b4dc917a66d0e3edb = L.marker(
+                [-21.7554517, -43.3399353],
+                {
+}
+            ).addTo(feature_group_604bddd22873c4278256aeaed8e7e073);
+        
+    
+            var icon_72aab76c456492fbdd5cd270e963c6f0 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#e41a1c",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_8399f12f91b95163294299dded4fa75b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_115526dc82b70ed746893ea0af91c6d5 = $(`<div id="html_115526dc82b70ed746893ea0af91c6d5" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>CASARAO BAR</b><br>                 📍 Parada 2 de 9<br>                 🍺 Roteiro 1<br>             </div>             </div>`)[0];
+                popup_8399f12f91b95163294299dded4fa75b.setContent(html_115526dc82b70ed746893ea0af91c6d5);
+            
+        
+
+        marker_914fddb12b8fd97b4dc917a66d0e3edb.bindPopup(popup_8399f12f91b95163294299dded4fa75b)
+        ;
+
+        
+    
+    
+            marker_914fddb12b8fd97b4dc917a66d0e3edb.bindTooltip(
+                `<div>
+                     CASARAO BAR
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_914fddb12b8fd97b4dc917a66d0e3edb.setIcon(icon_72aab76c456492fbdd5cd270e963c6f0);
+            
+    
+            var marker_1c708f38a32e97a4ea62bae639dab304 = L.marker(
+                [-21.757916, -43.341287],
+                {
+}
+            ).addTo(feature_group_604bddd22873c4278256aeaed8e7e073);
+        
+    
+            var icon_9b075f0da2583b77d2430ee42991a782 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#e41a1c",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_07e3bf094a536cf039546a81de43e153 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_48a8f67108bd2f1a8f75f061ba003b0c = $(`<div id="html_48a8f67108bd2f1a8f75f061ba003b0c" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>SUPER LAZIN</b><br>                 📍 Parada 3 de 9<br>                 🍺 Roteiro 1<br>             </div>             </div>`)[0];
+                popup_07e3bf094a536cf039546a81de43e153.setContent(html_48a8f67108bd2f1a8f75f061ba003b0c);
+            
+        
+
+        marker_1c708f38a32e97a4ea62bae639dab304.bindPopup(popup_07e3bf094a536cf039546a81de43e153)
+        ;
+
+        
+    
+    
+            marker_1c708f38a32e97a4ea62bae639dab304.bindTooltip(
+                `<div>
+                     SUPER LAZIN
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_1c708f38a32e97a4ea62bae639dab304.setIcon(icon_9b075f0da2583b77d2430ee42991a782);
+            
+    
+            var marker_8c722ccd2e94631a94c0f212ca134675 = L.marker(
+                [-21.7586111, -43.3472222],
+                {
+}
+            ).addTo(feature_group_604bddd22873c4278256aeaed8e7e073);
+        
+    
+            var icon_3e03bfac2716807b34fba6f17f8761b8 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#e41a1c",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_4f84baebd825f8dd39f8aae4c7d251c6 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_655ea387a1a87368ca63f29c631fe3d5 = $(`<div id="html_655ea387a1a87368ca63f29c631fe3d5" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>BAR DO ABILIO</b><br>                 📍 Parada 4 de 9<br>                 🍺 Roteiro 1<br>             </div>             </div>`)[0];
+                popup_4f84baebd825f8dd39f8aae4c7d251c6.setContent(html_655ea387a1a87368ca63f29c631fe3d5);
+            
+        
+
+        marker_8c722ccd2e94631a94c0f212ca134675.bindPopup(popup_4f84baebd825f8dd39f8aae4c7d251c6)
+        ;
+
+        
+    
+    
+            marker_8c722ccd2e94631a94c0f212ca134675.bindTooltip(
+                `<div>
+                     BAR DO ABILIO
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_8c722ccd2e94631a94c0f212ca134675.setIcon(icon_3e03bfac2716807b34fba6f17f8761b8);
+            
+    
+            var marker_df3f3e50908e982fdf3281acb9f02eb4 = L.marker(
+                [-21.7632591, -43.3454451],
+                {
+}
+            ).addTo(feature_group_604bddd22873c4278256aeaed8e7e073);
+        
+    
+            var icon_624f931407b9cff12ce7f978d65c3429 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#e41a1c",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_15f7d9c0847bc32a61c2fa0e175bf2ac = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_8cebdde0536b9174b451e7fd6acf6d8e = $(`<div id="html_8cebdde0536b9174b451e7fd6acf6d8e" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>CAMINHO DA ROCA</b><br>                 📍 Parada 5 de 9<br>                 🍺 Roteiro 1<br>             </div>             </div>`)[0];
+                popup_15f7d9c0847bc32a61c2fa0e175bf2ac.setContent(html_8cebdde0536b9174b451e7fd6acf6d8e);
+            
+        
+
+        marker_df3f3e50908e982fdf3281acb9f02eb4.bindPopup(popup_15f7d9c0847bc32a61c2fa0e175bf2ac)
+        ;
+
+        
+    
+    
+            marker_df3f3e50908e982fdf3281acb9f02eb4.bindTooltip(
+                `<div>
+                     CAMINHO DA ROCA
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_df3f3e50908e982fdf3281acb9f02eb4.setIcon(icon_624f931407b9cff12ce7f978d65c3429);
+            
+    
+            var marker_25782ce03b172ba9429160e5cf9a9375 = L.marker(
+                [-21.764711, -43.3445232],
+                {
+}
+            ).addTo(feature_group_604bddd22873c4278256aeaed8e7e073);
+        
+    
+            var icon_101610c3648151f8537ddb6154b7cbf7 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#e41a1c",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_3f45b04fb4d01c523df747b2bee83c0e = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_db32224f58bdb28cc1f40387bf05a8eb = $(`<div id="html_db32224f58bdb28cc1f40387bf05a8eb" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>PAPPADOG BAR</b><br>                 📍 Parada 6 de 9<br>                 🍺 Roteiro 1<br>             </div>             </div>`)[0];
+                popup_3f45b04fb4d01c523df747b2bee83c0e.setContent(html_db32224f58bdb28cc1f40387bf05a8eb);
+            
+        
+
+        marker_25782ce03b172ba9429160e5cf9a9375.bindPopup(popup_3f45b04fb4d01c523df747b2bee83c0e)
+        ;
+
+        
+    
+    
+            marker_25782ce03b172ba9429160e5cf9a9375.bindTooltip(
+                `<div>
+                     PAPPADOG BAR
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_25782ce03b172ba9429160e5cf9a9375.setIcon(icon_101610c3648151f8537ddb6154b7cbf7);
+            
+    
+            var marker_66054bf6f9cf19c10b9409cf079f05d6 = L.marker(
+                [-21.7687003, -43.3436456],
+                {
+}
+            ).addTo(feature_group_604bddd22873c4278256aeaed8e7e073);
+        
+    
+            var icon_566cd12a2710631932cf4d3afa78584f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#e41a1c",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_6d66100bf42d00287749353fbe8f3c88 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e6cac295148690ef8952873d00e41546 = $(`<div id="html_e6cac295148690ef8952873d00e41546" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>VARANDA RESTO BEER</b><br>                 📍 Parada 7 de 9<br>                 🍺 Roteiro 1<br>             </div>             </div>`)[0];
+                popup_6d66100bf42d00287749353fbe8f3c88.setContent(html_e6cac295148690ef8952873d00e41546);
+            
+        
+
+        marker_66054bf6f9cf19c10b9409cf079f05d6.bindPopup(popup_6d66100bf42d00287749353fbe8f3c88)
+        ;
+
+        
+    
+    
+            marker_66054bf6f9cf19c10b9409cf079f05d6.bindTooltip(
+                `<div>
+                     VARANDA RESTO BEER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_66054bf6f9cf19c10b9409cf079f05d6.setIcon(icon_566cd12a2710631932cf4d3afa78584f);
+            
+    
+            var marker_7743e039e2d1bea61001958d34fa8187 = L.marker(
+                [-21.764565, -43.3521346],
+                {
+}
+            ).addTo(feature_group_604bddd22873c4278256aeaed8e7e073);
+        
+    
+            var icon_cdec76b2f9e855a41d9783176e519c32 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#e41a1c",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_fc15858ac9d1963789cb87719d46a5d1 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c36ac3af0a71f74ed7fe9544e5b6c744 = $(`<div id="html_c36ac3af0a71f74ed7fe9544e5b6c744" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>CARLOTA</b><br>                 📍 Parada 8 de 9<br>                 🍺 Roteiro 1<br>             </div>             </div>`)[0];
+                popup_fc15858ac9d1963789cb87719d46a5d1.setContent(html_c36ac3af0a71f74ed7fe9544e5b6c744);
+            
+        
+
+        marker_7743e039e2d1bea61001958d34fa8187.bindPopup(popup_fc15858ac9d1963789cb87719d46a5d1)
+        ;
+
+        
+    
+    
+            marker_7743e039e2d1bea61001958d34fa8187.bindTooltip(
+                `<div>
+                     CARLOTA
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_7743e039e2d1bea61001958d34fa8187.setIcon(icon_cdec76b2f9e855a41d9783176e519c32);
+            
+    
+            var marker_32504995c9503680b7861c5be69abdd3 = L.marker(
+                [-21.7652098, -43.3536869],
+                {
+}
+            ).addTo(feature_group_604bddd22873c4278256aeaed8e7e073);
+        
+    
+            var icon_5e43cc79136c59abe1582ccab02878d2 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "stop",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_cb3e5bc1e7749e2315499aef6b0be3f1 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b56f341f72dc3c801ceced0d68d5e3ac = $(`<div id="html_b56f341f72dc3c801ceced0d68d5e3ac" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>BAR DU CHICO</b><br>                 📍 Parada 9 de 9<br>                 🍺 Roteiro 1<br>             </div>             </div>`)[0];
+                popup_cb3e5bc1e7749e2315499aef6b0be3f1.setContent(html_b56f341f72dc3c801ceced0d68d5e3ac);
+            
+        
+
+        marker_32504995c9503680b7861c5be69abdd3.bindPopup(popup_cb3e5bc1e7749e2315499aef6b0be3f1)
+        ;
+
+        
+    
+    
+            marker_32504995c9503680b7861c5be69abdd3.bindTooltip(
+                `<div>
+                     🏁 FIM: BAR DU CHICO
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_32504995c9503680b7861c5be69abdd3.setIcon(icon_5e43cc79136c59abe1582ccab02878d2);
+            
+    
+            feature_group_604bddd22873c4278256aeaed8e7e073.addTo(map_e6a3f6376f3911aea128a1fc27e6f7ed);
+        
+    
+            var feature_group_afde25b6e6fb44c60e8e5921f8fc081d = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var poly_line_82558425155432927b16d10b7b9ccd44 = L.polyline(
+                [[-21.7540321, -43.3521357], [-21.7546147, -43.3518336], [-21.7547477, -43.3514547], [-21.7546993, -43.3513035], [-21.7536709, -43.3515867], [-21.7534837, -43.3516379], [-21.7535715, -43.3517523], [-21.7536974, -43.352023], [-21.7537982, -43.3522571], [-21.7541298, -43.3530274], [-21.7533643, -43.3532232]],
+                {"bubblingMouseEvents": true, "color": "#4daf4a", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#4daf4a", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_afde25b6e6fb44c60e8e5921f8fc081d);
+        
+    
+        var popup_c0667c362da5739705627aae7a942522 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f386abc466669c0c453953fbf6bbf421 = $(`<div id="html_f386abc466669c0c453953fbf6bbf421" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 3</div>`)[0];
+                popup_c0667c362da5739705627aae7a942522.setContent(html_f386abc466669c0c453953fbf6bbf421);
+            
+        
+
+        poly_line_82558425155432927b16d10b7b9ccd44.bindPopup(popup_c0667c362da5739705627aae7a942522)
+        ;
+
+        
+    
+    
+            var poly_line_9845126602cf3837a1a761e5c08fa1b5 = L.polyline(
+                [[-21.7533643, -43.3532232], [-21.7530963, -43.3526211], [-21.7537982, -43.3522571], [-21.7541298, -43.3530274], [-21.7546764, -43.3542926], [-21.7539774, -43.3546032], [-21.7530446, -43.3560899], [-21.7529855, -43.3573529]],
+                {"bubblingMouseEvents": true, "color": "#4daf4a", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#4daf4a", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_afde25b6e6fb44c60e8e5921f8fc081d);
+        
+    
+        var popup_d76f9c85b47381a221c390aee846055f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_65958f60efc6c6e7db8c989e154ba25a = $(`<div id="html_65958f60efc6c6e7db8c989e154ba25a" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 3</div>`)[0];
+                popup_d76f9c85b47381a221c390aee846055f.setContent(html_65958f60efc6c6e7db8c989e154ba25a);
+            
+        
+
+        poly_line_9845126602cf3837a1a761e5c08fa1b5.bindPopup(popup_d76f9c85b47381a221c390aee846055f)
+        ;
+
+        
+    
+    
+            var poly_line_b8df45537f6845adcd4f32d2c9282a50 = L.polyline(
+                [[-21.7529855, -43.3573529], [-21.7532808, -43.3580161], [-21.7537567, -43.3584922]],
+                {"bubblingMouseEvents": true, "color": "#4daf4a", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#4daf4a", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_afde25b6e6fb44c60e8e5921f8fc081d);
+        
+    
+        var popup_e816fe3ecb5cb95f67ab226d084bef27 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a2ea30912111b534be57184579bf0812 = $(`<div id="html_a2ea30912111b534be57184579bf0812" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 3</div>`)[0];
+                popup_e816fe3ecb5cb95f67ab226d084bef27.setContent(html_a2ea30912111b534be57184579bf0812);
+            
+        
+
+        poly_line_b8df45537f6845adcd4f32d2c9282a50.bindPopup(popup_e816fe3ecb5cb95f67ab226d084bef27)
+        ;
+
+        
+    
+    
+            var poly_line_b1a1cda6ccb018c40986d9a59da8cf76 = L.polyline(
+                [[-21.7537567, -43.3584922], [-21.7534014, -43.3589338], [-21.7528101, -43.3583822]],
+                {"bubblingMouseEvents": true, "color": "#4daf4a", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#4daf4a", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_afde25b6e6fb44c60e8e5921f8fc081d);
+        
+    
+        var popup_5da55282c3ccf652346e5800ec421818 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b4109e6d5e125ba16c465a414aefa32f = $(`<div id="html_b4109e6d5e125ba16c465a414aefa32f" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 3</div>`)[0];
+                popup_5da55282c3ccf652346e5800ec421818.setContent(html_b4109e6d5e125ba16c465a414aefa32f);
+            
+        
+
+        poly_line_b1a1cda6ccb018c40986d9a59da8cf76.bindPopup(popup_5da55282c3ccf652346e5800ec421818)
+        ;
+
+        
+    
+    
+            var poly_line_a36465a85f8f90bbeb2e91d5b6f19ef4 = L.polyline(
+                [[-21.7528101, -43.3583822], [-21.7532808, -43.3580161], [-21.7537567, -43.3584922], [-21.7543947, -43.3592172], [-21.7544403, -43.3606277], [-21.7544407, -43.3606506], [-21.754299, -43.3608378], [-21.7542029, -43.3609673], [-21.7540417, -43.3610395], [-21.7538863, -43.3610024], [-21.7537526, -43.3609245], [-21.7537336, -43.3609013], [-21.7536841, -43.3609057], [-21.7536716, -43.3609621], [-21.7536871, -43.360982], [-21.7529198, -43.3611198], [-21.753115, -43.3619763], [-21.7532519, -43.362549], [-21.7526515, -43.362726], [-21.7520508, -43.3629008], [-21.7523035, -43.3639237], [-21.752288, -43.3640369], [-21.752296, -43.3642263], [-21.7524862, -43.3646572], [-21.7526459, -43.3652567], [-21.7526221, -43.365515], [-21.7525794, -43.3655484], [-21.7525595, -43.3656976], [-21.752665, -43.3657745], [-21.7528682, -43.3661726], [-21.7529524, -43.3666416], [-21.7532139, -43.368887], [-21.7526808, -43.3710529], [-21.7543185, -43.3735819], [-21.7545479, -43.3739313], [-21.754573, -43.3739657], [-21.75471, -43.3741254], [-21.7552886, -43.3762124]],
+                {"bubblingMouseEvents": true, "color": "#4daf4a", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#4daf4a", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_afde25b6e6fb44c60e8e5921f8fc081d);
+        
+    
+        var popup_7080ad1e75f28d12cee44c5f6e5de7a1 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_757f3a1c98d8bd52a03d93bde00036c6 = $(`<div id="html_757f3a1c98d8bd52a03d93bde00036c6" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 3</div>`)[0];
+                popup_7080ad1e75f28d12cee44c5f6e5de7a1.setContent(html_757f3a1c98d8bd52a03d93bde00036c6);
+            
+        
+
+        poly_line_a36465a85f8f90bbeb2e91d5b6f19ef4.bindPopup(popup_7080ad1e75f28d12cee44c5f6e5de7a1)
+        ;
+
+        
+    
+    
+            var poly_line_83c6d5f5b96f03de187d5ce2f1475fbd = L.polyline(
+                [[-21.7552886, -43.3762124], [-21.75471, -43.3741254], [-21.7546508, -43.3739734], [-21.7546728, -43.3739562], [-21.7546711, -43.3738413], [-21.7546524, -43.3738269], [-21.7543185, -43.3735819], [-21.7526808, -43.3710529], [-21.7532139, -43.368887], [-21.7529524, -43.3666416], [-21.7528682, -43.3661726], [-21.7527882, -43.3656947], [-21.7527942, -43.365621], [-21.7527554, -43.3655361], [-21.7527335, -43.3655199], [-21.7526221, -43.365515], [-21.7525794, -43.3655484], [-21.7523036, -43.3655069], [-21.7512353, -43.3640108], [-21.7512216, -43.3638787], [-21.7494982, -43.3612391], [-21.7494028, -43.3612561], [-21.7490567, -43.3619236], [-21.7487602, -43.3625058], [-21.7485999, -43.3626152], [-21.7469385, -43.3639671], [-21.7475389, -43.3642223], [-21.7471926, -43.3648795], [-21.7479898, -43.3659363], [-21.7483571, -43.3664482], [-21.7492055, -43.3686185]],
+                {"bubblingMouseEvents": true, "color": "#4daf4a", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#4daf4a", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_afde25b6e6fb44c60e8e5921f8fc081d);
+        
+    
+        var popup_4814a9e969871408b25ba27f4221dcf7 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c65c35395a9291804a9b407171f9a87b = $(`<div id="html_c65c35395a9291804a9b407171f9a87b" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 3</div>`)[0];
+                popup_4814a9e969871408b25ba27f4221dcf7.setContent(html_c65c35395a9291804a9b407171f9a87b);
+            
+        
+
+        poly_line_83c6d5f5b96f03de187d5ce2f1475fbd.bindPopup(popup_4814a9e969871408b25ba27f4221dcf7)
+        ;
+
+        
+    
+    
+            var marker_92e2642bab479f64b9a3a26b2d0023b7 = L.marker(
+                [-21.7541569, -43.3521957],
+                {
+}
+            ).addTo(feature_group_afde25b6e6fb44c60e8e5921f8fc081d);
+        
+    
+            var icon_353592471f2b78505cff481385b28e72 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "play",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_f3ba2cb383ce2459773ddc2b78f37f74 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_13e376f14124a43a82d107775152c461 = $(`<div id="html_13e376f14124a43a82d107775152c461" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; width: 220px;">                     <b>BAR BATATA D'MOLA</b><br>                     📍 Parada 1 de 7<br>                     🍺 Roteiro 3<br>                     📏 Distância total: 6.36 km<br>                     🚶 Modo: DRIVE                 </div>                 </div>`)[0];
+                popup_f3ba2cb383ce2459773ddc2b78f37f74.setContent(html_13e376f14124a43a82d107775152c461);
+            
+        
+
+        marker_92e2642bab479f64b9a3a26b2d0023b7.bindPopup(popup_f3ba2cb383ce2459773ddc2b78f37f74)
+        ;
+
+        
+    
+    
+            marker_92e2642bab479f64b9a3a26b2d0023b7.bindTooltip(
+                `<div>
+                     🏁 INÍCIO: BAR BATATA D'MOLA
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_92e2642bab479f64b9a3a26b2d0023b7.setIcon(icon_353592471f2b78505cff481385b28e72);
+            
+    
+            var marker_68ed5b93a8110611168c078b0682f006 = L.marker(
+                [-21.7534911, -43.3533205],
+                {
+}
+            ).addTo(feature_group_afde25b6e6fb44c60e8e5921f8fc081d);
+        
+    
+            var icon_c37a845ff7c978aa1886de56598613e5 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#4daf4a",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_358d337de179738b718808501db4b2d5 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_3fe2a1b6655ebc2a075a074191b7831f = $(`<div id="html_3fe2a1b6655ebc2a075a074191b7831f" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>BAR DO MARQUIM</b><br>                 📍 Parada 2 de 7<br>                 🍺 Roteiro 3<br>             </div>             </div>`)[0];
+                popup_358d337de179738b718808501db4b2d5.setContent(html_3fe2a1b6655ebc2a075a074191b7831f);
+            
+        
+
+        marker_68ed5b93a8110611168c078b0682f006.bindPopup(popup_358d337de179738b718808501db4b2d5)
+        ;
+
+        
+    
+    
+            marker_68ed5b93a8110611168c078b0682f006.bindTooltip(
+                `<div>
+                     BAR DO MARQUIM
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_68ed5b93a8110611168c078b0682f006.setIcon(icon_c37a845ff7c978aa1886de56598613e5);
+            
+    
+            var marker_dec25ee3ca42121d94941b25e880a279 = L.marker(
+                [-21.752821, -43.357038],
+                {
+}
+            ).addTo(feature_group_afde25b6e6fb44c60e8e5921f8fc081d);
+        
+    
+            var icon_d21f42bea4ad78c7d6a0bfbef37fd797 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#4daf4a",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_65618c1053c6b92f5a8b0bfd93a7f2db = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e8da8c345755beeda709986f3f5743b6 = $(`<div id="html_e8da8c345755beeda709986f3f5743b6" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>REZA FORTE</b><br>                 📍 Parada 3 de 7<br>                 🍺 Roteiro 3<br>             </div>             </div>`)[0];
+                popup_65618c1053c6b92f5a8b0bfd93a7f2db.setContent(html_e8da8c345755beeda709986f3f5743b6);
+            
+        
+
+        marker_dec25ee3ca42121d94941b25e880a279.bindPopup(popup_65618c1053c6b92f5a8b0bfd93a7f2db)
+        ;
+
+        
+    
+    
+            marker_dec25ee3ca42121d94941b25e880a279.bindTooltip(
+                `<div>
+                     REZA FORTE
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_dec25ee3ca42121d94941b25e880a279.setIcon(icon_d21f42bea4ad78c7d6a0bfbef37fd797);
+            
+    
+            var marker_6d13b2da7c267c301bb6dcbaac7ce339 = L.marker(
+                [-21.7536439, -43.3586749],
+                {
+}
+            ).addTo(feature_group_afde25b6e6fb44c60e8e5921f8fc081d);
+        
+    
+            var icon_b60b608204317ddc4a8f74e32030f5a8 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#4daf4a",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_1b3604a9979a6e374fdea505be438bf0 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e24c79f9d686449c8447dcc35b29c360 = $(`<div id="html_e24c79f9d686449c8447dcc35b29c360" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>BIROSCA BAR E RESTAURANTE</b><br>                 📍 Parada 4 de 7<br>                 🍺 Roteiro 3<br>             </div>             </div>`)[0];
+                popup_1b3604a9979a6e374fdea505be438bf0.setContent(html_e24c79f9d686449c8447dcc35b29c360);
+            
+        
+
+        marker_6d13b2da7c267c301bb6dcbaac7ce339.bindPopup(popup_1b3604a9979a6e374fdea505be438bf0)
+        ;
+
+        
+    
+    
+            marker_6d13b2da7c267c301bb6dcbaac7ce339.bindTooltip(
+                `<div>
+                     BIROSCA BAR E RESTAURANTE
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_6d13b2da7c267c301bb6dcbaac7ce339.setIcon(icon_b60b608204317ddc4a8f74e32030f5a8);
+            
+    
+            var marker_c4df9e767a7aae4e3a526d3818757b1c = L.marker(
+                [-21.752784, -43.358278],
+                {
+}
+            ).addTo(feature_group_afde25b6e6fb44c60e8e5921f8fc081d);
+        
+    
+            var icon_09676a599f26ee5a3a800c231b3afe91 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#4daf4a",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_55e7462078567af0c314fdbda7e7a441 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_af36709c0609685f547182350a2a091a = $(`<div id="html_af36709c0609685f547182350a2a091a" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>INFORMAL BAR & RESTAURANTE</b><br>                 📍 Parada 5 de 7<br>                 🍺 Roteiro 3<br>             </div>             </div>`)[0];
+                popup_55e7462078567af0c314fdbda7e7a441.setContent(html_af36709c0609685f547182350a2a091a);
+            
+        
+
+        marker_c4df9e767a7aae4e3a526d3818757b1c.bindPopup(popup_55e7462078567af0c314fdbda7e7a441)
+        ;
+
+        
+    
+    
+            marker_c4df9e767a7aae4e3a526d3818757b1c.bindTooltip(
+                `<div>
+                     INFORMAL BAR & RESTAURANTE
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_c4df9e767a7aae4e3a526d3818757b1c.setIcon(icon_09676a599f26ee5a3a800c231b3afe91);
+            
+    
+            var marker_22e8b936d842ddfb0d03286dd89a2810 = L.marker(
+                [-21.755112, -43.37624],
+                {
+}
+            ).addTo(feature_group_afde25b6e6fb44c60e8e5921f8fc081d);
+        
+    
+            var icon_b03ace29f3c83c6f8965751a15b86237 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#4daf4a",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_81cc678eb3a77fac6975de795fbca5e3 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e7289c4bd93cbbd17c957de6838ecf57 = $(`<div id="html_e7289c4bd93cbbd17c957de6838ecf57" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>ZAKAS GASTRO BEER</b><br>                 📍 Parada 6 de 7<br>                 🍺 Roteiro 3<br>             </div>             </div>`)[0];
+                popup_81cc678eb3a77fac6975de795fbca5e3.setContent(html_e7289c4bd93cbbd17c957de6838ecf57);
+            
+        
+
+        marker_22e8b936d842ddfb0d03286dd89a2810.bindPopup(popup_81cc678eb3a77fac6975de795fbca5e3)
+        ;
+
+        
+    
+    
+            marker_22e8b936d842ddfb0d03286dd89a2810.bindTooltip(
+                `<div>
+                     ZAKAS GASTRO BEER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_22e8b936d842ddfb0d03286dd89a2810.setIcon(icon_b03ace29f3c83c6f8965751a15b86237);
+            
+    
+            var marker_e514d3b4ba4495d1ff3a40347925e494 = L.marker(
+                [-21.7498068, -43.3680499],
+                {
+}
+            ).addTo(feature_group_afde25b6e6fb44c60e8e5921f8fc081d);
+        
+    
+            var icon_2daf8570976dd00b3685839e79f0f881 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "stop",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_c79fc695bacbed7a26060286efaa088c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_8cc56a2764c2ab03c0ec45b98ca99fe2 = $(`<div id="html_8cc56a2764c2ab03c0ec45b98ca99fe2" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>BAR DO PASSARINHO</b><br>                 📍 Parada 7 de 7<br>                 🍺 Roteiro 3<br>             </div>             </div>`)[0];
+                popup_c79fc695bacbed7a26060286efaa088c.setContent(html_8cc56a2764c2ab03c0ec45b98ca99fe2);
+            
+        
+
+        marker_e514d3b4ba4495d1ff3a40347925e494.bindPopup(popup_c79fc695bacbed7a26060286efaa088c)
+        ;
+
+        
+    
+    
+            marker_e514d3b4ba4495d1ff3a40347925e494.bindTooltip(
+                `<div>
+                     🏁 FIM: BAR DO PASSARINHO
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_e514d3b4ba4495d1ff3a40347925e494.setIcon(icon_2daf8570976dd00b3685839e79f0f881);
+            
+    
+            feature_group_afde25b6e6fb44c60e8e5921f8fc081d.addTo(map_e6a3f6376f3911aea128a1fc27e6f7ed);
+        
+    
+            var feature_group_8bbec1678a26c27032fb124651221080 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var poly_line_e11bd5248709ac51daeb839748948093 = L.polyline(
+                [[-21.7670879, -43.3719999], [-21.7672493, -43.370752], [-21.7677665, -43.3694248], [-21.7675964, -43.3691556]],
+                {"bubblingMouseEvents": true, "color": "#984ea3", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#984ea3", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_8bbec1678a26c27032fb124651221080);
+        
+    
+        var popup_9ec84fa6948da72709a87024b39b3062 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_7e93341eba52f27441f6366561bf9343 = $(`<div id="html_7e93341eba52f27441f6366561bf9343" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 4</div>`)[0];
+                popup_9ec84fa6948da72709a87024b39b3062.setContent(html_7e93341eba52f27441f6366561bf9343);
+            
+        
+
+        poly_line_e11bd5248709ac51daeb839748948093.bindPopup(popup_9ec84fa6948da72709a87024b39b3062)
+        ;
+
+        
+    
+    
+            var poly_line_22b96653488e646d174e161bd614d23b = L.polyline(
+                [[-21.7675964, -43.3691556], [-21.7677665, -43.3694248], [-21.7679741, -43.369629], [-21.7685026, -43.3704392], [-21.7688923, -43.3709772], [-21.769314, -43.371558], [-21.7703342, -43.3740405], [-21.7706589, -43.3755557], [-21.7706956, -43.3759492], [-21.7710665, -43.3766502], [-21.7718648, -43.3766546], [-21.7718606, -43.3757578], [-21.7718673, -43.3751574]],
+                {"bubblingMouseEvents": true, "color": "#984ea3", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#984ea3", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_8bbec1678a26c27032fb124651221080);
+        
+    
+        var popup_f50d43a3e1586c398066af484046e5dd = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5fd5680f98e60fe0eef7850ad4333e94 = $(`<div id="html_5fd5680f98e60fe0eef7850ad4333e94" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 4</div>`)[0];
+                popup_f50d43a3e1586c398066af484046e5dd.setContent(html_5fd5680f98e60fe0eef7850ad4333e94);
+            
+        
+
+        poly_line_22b96653488e646d174e161bd614d23b.bindPopup(popup_f50d43a3e1586c398066af484046e5dd)
+        ;
+
+        
+    
+    
+            var poly_line_438808f7bb1e586c3a0c7f5b52668460 = L.polyline(
+                [[-21.7718673, -43.3751574], [-21.7724405, -43.3752245], [-21.7724503, -43.3756512], [-21.7724522, -43.3757823], [-21.7724609, -43.3762936], [-21.7724609, -43.3764298], [-21.7726088, -43.3763384], [-21.7738126, -43.3760268], [-21.7740208, -43.3766639], [-21.7745253, -43.3764965], [-21.7747451, -43.3772206], [-21.7752326, -43.3770932], [-21.7756218, -43.3783257]],
+                {"bubblingMouseEvents": true, "color": "#984ea3", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#984ea3", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_8bbec1678a26c27032fb124651221080);
+        
+    
+        var popup_b37fc4183ae9a8b7c6e0adb175ec2398 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_357d300dfee40b90c23356d4e3dc6fd6 = $(`<div id="html_357d300dfee40b90c23356d4e3dc6fd6" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 4</div>`)[0];
+                popup_b37fc4183ae9a8b7c6e0adb175ec2398.setContent(html_357d300dfee40b90c23356d4e3dc6fd6);
+            
+        
+
+        poly_line_438808f7bb1e586c3a0c7f5b52668460.bindPopup(popup_b37fc4183ae9a8b7c6e0adb175ec2398)
+        ;
+
+        
+    
+    
+            var poly_line_ba13f4f01fb6002565327b4dbe5440ed = L.polyline(
+                [[-21.7756218, -43.3783257], [-21.7751259, -43.3785739], [-21.7746516, -43.3788078], [-21.7740887, -43.3790714], [-21.7735494, -43.3793443], [-21.772819, -43.3796688], [-21.7729386, -43.3801228], [-21.7733284, -43.3815631], [-21.7736995, -43.3820339], [-21.7745931, -43.3827607], [-21.7750265, -43.3833099], [-21.7754176, -43.3836941], [-21.7780258, -43.3836149], [-21.7790181, -43.3837563], [-21.7789807, -43.3839459], [-21.7789856, -43.3845987], [-21.7794021, -43.3843857], [-21.7796777, -43.3842234], [-21.7798312, -43.3840898], [-21.7811361, -43.3838477], [-21.7815651, -43.3837325], [-21.7821175, -43.3836071], [-21.7847926, -43.3832839], [-21.784921, -43.3833339], [-21.7887671, -43.3832194]],
+                {"bubblingMouseEvents": true, "color": "#984ea3", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#984ea3", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_8bbec1678a26c27032fb124651221080);
+        
+    
+        var popup_9f62ba914b11eaba0e3f52234c811cb0 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a5a7aeb5c8f1db9d2028cfb4b54e9721 = $(`<div id="html_a5a7aeb5c8f1db9d2028cfb4b54e9721" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 4</div>`)[0];
+                popup_9f62ba914b11eaba0e3f52234c811cb0.setContent(html_a5a7aeb5c8f1db9d2028cfb4b54e9721);
+            
+        
+
+        poly_line_ba13f4f01fb6002565327b4dbe5440ed.bindPopup(popup_9f62ba914b11eaba0e3f52234c811cb0)
+        ;
+
+        
+    
+    
+            var poly_line_6a27d208f365ddfe67a77bac3bcddbc8 = L.polyline(
+                [[-21.7887671, -43.3832194], [-21.7890847, -43.3828171], [-21.7871758, -43.3808405], [-21.7872907, -43.3806866], [-21.7873193, -43.3806567], [-21.7881445, -43.3818642], [-21.7887883, -43.3817368], [-21.7891243, -43.3813676]],
+                {"bubblingMouseEvents": true, "color": "#984ea3", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#984ea3", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_8bbec1678a26c27032fb124651221080);
+        
+    
+        var popup_a0178ef92369d2d2f762d0827c9fd979 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_13899cee2943ab7b8ab88cb1b5a1e2fd = $(`<div id="html_13899cee2943ab7b8ab88cb1b5a1e2fd" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 4</div>`)[0];
+                popup_a0178ef92369d2d2f762d0827c9fd979.setContent(html_13899cee2943ab7b8ab88cb1b5a1e2fd);
+            
+        
+
+        poly_line_6a27d208f365ddfe67a77bac3bcddbc8.bindPopup(popup_a0178ef92369d2d2f762d0827c9fd979)
+        ;
+
+        
+    
+    
+            var poly_line_03e33b392979823c66663141ae476853 = L.polyline(
+                [[-21.7891243, -43.3813676], [-21.7899922, -43.3789496], [-21.7899775, -43.378934], [-21.7895032, -43.3783684], [-21.7890432, -43.3778444]],
+                {"bubblingMouseEvents": true, "color": "#984ea3", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#984ea3", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_8bbec1678a26c27032fb124651221080);
+        
+    
+        var popup_44f0e69670df80a4847c5a65defa7bc0 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_7edfcd88075631f75560f4948b2987dc = $(`<div id="html_7edfcd88075631f75560f4948b2987dc" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 4</div>`)[0];
+                popup_44f0e69670df80a4847c5a65defa7bc0.setContent(html_7edfcd88075631f75560f4948b2987dc);
+            
+        
+
+        poly_line_03e33b392979823c66663141ae476853.bindPopup(popup_44f0e69670df80a4847c5a65defa7bc0)
+        ;
+
+        
+    
+    
+            var marker_8bb027bb28b56f9e22487bd786f601eb = L.marker(
+                [-21.766567, -43.3723106],
+                {
+}
+            ).addTo(feature_group_8bbec1678a26c27032fb124651221080);
+        
+    
+            var icon_c8448893593b0aa6e3f4cf9355e1b13c = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "play",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_4ec4627822446b3d316638c67446eec9 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_06c240d9981535dde7d094f5420cb3e9 = $(`<div id="html_06c240d9981535dde7d094f5420cb3e9" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; width: 220px;">                     <b>BAR DO ANTONIO</b><br>                     📍 Parada 1 de 7<br>                     🍺 Roteiro 4<br>                     📏 Distância total: 5.95 km<br>                     🚶 Modo: DRIVE                 </div>                 </div>`)[0];
+                popup_4ec4627822446b3d316638c67446eec9.setContent(html_06c240d9981535dde7d094f5420cb3e9);
+            
+        
+
+        marker_8bb027bb28b56f9e22487bd786f601eb.bindPopup(popup_4ec4627822446b3d316638c67446eec9)
+        ;
+
+        
+    
+    
+            marker_8bb027bb28b56f9e22487bd786f601eb.bindTooltip(
+                `<div>
+                     🏁 INÍCIO: BAR DO ANTONIO
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_8bb027bb28b56f9e22487bd786f601eb.setIcon(icon_c8448893593b0aa6e3f4cf9355e1b13c);
+            
+    
+            var marker_3a3b32df85745c9fb5423dca4c7d3818 = L.marker(
+                [-21.7672931, -43.3688659],
+                {
+}
+            ).addTo(feature_group_8bbec1678a26c27032fb124651221080);
+        
+    
+            var icon_103c90c878b5a57055acb109b2921fc0 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#984ea3",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_7a1bc3a2826696d6201617c780f94f76 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_29ed71f8901790e36813c06b18c48ec5 = $(`<div id="html_29ed71f8901790e36813c06b18c48ec5" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>BAR DO JORGE</b><br>                 📍 Parada 2 de 7<br>                 🍺 Roteiro 4<br>             </div>             </div>`)[0];
+                popup_7a1bc3a2826696d6201617c780f94f76.setContent(html_29ed71f8901790e36813c06b18c48ec5);
+            
+        
+
+        marker_3a3b32df85745c9fb5423dca4c7d3818.bindPopup(popup_7a1bc3a2826696d6201617c780f94f76)
+        ;
+
+        
+    
+    
+            marker_3a3b32df85745c9fb5423dca4c7d3818.bindTooltip(
+                `<div>
+                     BAR DO JORGE
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_3a3b32df85745c9fb5423dca4c7d3818.setIcon(icon_103c90c878b5a57055acb109b2921fc0);
+            
+    
+            var marker_725de275333df0a7974c9e2741ccd1da = L.marker(
+                [-21.7717784, -43.3752646],
+                {
+}
+            ).addTo(feature_group_8bbec1678a26c27032fb124651221080);
+        
+    
+            var icon_87989e95e2617a7346b7b644d4df2a2a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#984ea3",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_77368a756d8b4cf0a03293c223d0b847 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_da370fd4586c5fe7a03ed5619bfc69bf = $(`<div id="html_da370fd4586c5fe7a03ed5619bfc69bf" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>BUTECO DO PRINCIPE</b><br>                 📍 Parada 3 de 7<br>                 🍺 Roteiro 4<br>             </div>             </div>`)[0];
+                popup_77368a756d8b4cf0a03293c223d0b847.setContent(html_da370fd4586c5fe7a03ed5619bfc69bf);
+            
+        
+
+        marker_725de275333df0a7974c9e2741ccd1da.bindPopup(popup_77368a756d8b4cf0a03293c223d0b847)
+        ;
+
+        
+    
+    
+            marker_725de275333df0a7974c9e2741ccd1da.bindTooltip(
+                `<div>
+                     BUTECO DO PRINCIPE
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_725de275333df0a7974c9e2741ccd1da.setIcon(icon_87989e95e2617a7346b7b644d4df2a2a);
+            
+    
+            var marker_3abda56f8006cc4d8bef1b9b4bcb5aa5 = L.marker(
+                [-21.7756168, -43.378489],
+                {
+}
+            ).addTo(feature_group_8bbec1678a26c27032fb124651221080);
+        
+    
+            var icon_590168eff4a3b30cb793effc0d984749 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#984ea3",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_39161087cd93f19207af66d6abc2869b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_87b7e3b23f38a102845361072b7634da = $(`<div id="html_87b7e3b23f38a102845361072b7634da" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>BAR DO BENE</b><br>                 📍 Parada 4 de 7<br>                 🍺 Roteiro 4<br>             </div>             </div>`)[0];
+                popup_39161087cd93f19207af66d6abc2869b.setContent(html_87b7e3b23f38a102845361072b7634da);
+            
+        
+
+        marker_3abda56f8006cc4d8bef1b9b4bcb5aa5.bindPopup(popup_39161087cd93f19207af66d6abc2869b)
+        ;
+
+        
+    
+    
+            marker_3abda56f8006cc4d8bef1b9b4bcb5aa5.bindTooltip(
+                `<div>
+                     BAR DO BENE
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_3abda56f8006cc4d8bef1b9b4bcb5aa5.setIcon(icon_590168eff4a3b30cb793effc0d984749);
+            
+    
+            var marker_ca1a3d717b6c2c0abe9279544b2faedc = L.marker(
+                [-21.7882238, -43.3831797],
+                {
+}
+            ).addTo(feature_group_8bbec1678a26c27032fb124651221080);
+        
+    
+            var icon_2b4e3bd4b48cd58d161f05b53954e83e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#984ea3",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_e3d5daf5a4f72aaa7dc1e4addd4fda38 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_8815ea9959878af90ff7bd2aa20a7cd6 = $(`<div id="html_8815ea9959878af90ff7bd2aa20a7cd6" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>BAR DO TIAO</b><br>                 📍 Parada 5 de 7<br>                 🍺 Roteiro 4<br>             </div>             </div>`)[0];
+                popup_e3d5daf5a4f72aaa7dc1e4addd4fda38.setContent(html_8815ea9959878af90ff7bd2aa20a7cd6);
+            
+        
+
+        marker_ca1a3d717b6c2c0abe9279544b2faedc.bindPopup(popup_e3d5daf5a4f72aaa7dc1e4addd4fda38)
+        ;
+
+        
+    
+    
+            marker_ca1a3d717b6c2c0abe9279544b2faedc.bindTooltip(
+                `<div>
+                     BAR DO TIAO
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_ca1a3d717b6c2c0abe9279544b2faedc.setIcon(icon_2b4e3bd4b48cd58d161f05b53954e83e);
+            
+    
+            var marker_e03880a4eb53a1733ebde26f1c59b135 = L.marker(
+                [-21.789056, -43.3810512],
+                {
+}
+            ).addTo(feature_group_8bbec1678a26c27032fb124651221080);
+        
+    
+            var icon_1c71cb9829df9d3a3738bad24f0434ef = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#984ea3",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_8c06a44823a8a8b06ad3464ac532617c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_8eeeb0df4caf85b0269d8de4369d474b = $(`<div id="html_8eeeb0df4caf85b0269d8de4369d474b" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>DON JUAN GASTRONOMIA E EVENTOS</b><br>                 📍 Parada 6 de 7<br>                 🍺 Roteiro 4<br>             </div>             </div>`)[0];
+                popup_8c06a44823a8a8b06ad3464ac532617c.setContent(html_8eeeb0df4caf85b0269d8de4369d474b);
+            
+        
+
+        marker_e03880a4eb53a1733ebde26f1c59b135.bindPopup(popup_8c06a44823a8a8b06ad3464ac532617c)
+        ;
+
+        
+    
+    
+            marker_e03880a4eb53a1733ebde26f1c59b135.bindTooltip(
+                `<div>
+                     DON JUAN GASTRONOMIA E EVENTOS
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_e03880a4eb53a1733ebde26f1c59b135.setIcon(icon_1c71cb9829df9d3a3738bad24f0434ef);
+            
+    
+            var marker_ce2376d3051903c139df5318e1fdbe42 = L.marker(
+                [-21.7889633, -43.3784154],
+                {
+}
+            ).addTo(feature_group_8bbec1678a26c27032fb124651221080);
+        
+    
+            var icon_de6f2e22e2d3cea736b4bc9a38b5a7a9 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "stop",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_e9efaec5c40120f6564ccf030caa257f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_57b0c1555f170480527d352cd2df8c64 = $(`<div id="html_57b0c1555f170480527d352cd2df8c64" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>PETISQUEIRA</b><br>                 📍 Parada 7 de 7<br>                 🍺 Roteiro 4<br>             </div>             </div>`)[0];
+                popup_e9efaec5c40120f6564ccf030caa257f.setContent(html_57b0c1555f170480527d352cd2df8c64);
+            
+        
+
+        marker_ce2376d3051903c139df5318e1fdbe42.bindPopup(popup_e9efaec5c40120f6564ccf030caa257f)
+        ;
+
+        
+    
+    
+            marker_ce2376d3051903c139df5318e1fdbe42.bindTooltip(
+                `<div>
+                     🏁 FIM: PETISQUEIRA
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_ce2376d3051903c139df5318e1fdbe42.setIcon(icon_de6f2e22e2d3cea736b4bc9a38b5a7a9);
+            
+    
+            feature_group_8bbec1678a26c27032fb124651221080.addTo(map_e6a3f6376f3911aea128a1fc27e6f7ed);
+        
+    
+            var feature_group_2512ba091799df03dbbcb7e0f52dcd7a = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var poly_line_14597ec37f9ecbe2f38b54bf2d789cf0 = L.polyline(
+                [[-21.7900761, -43.3533664], [-21.7898935, -43.3528559], [-21.7898524, -43.3527937], [-21.7892603, -43.3529681], [-21.7878778, -43.3509917], [-21.7857805, -43.347438], [-21.785705, -43.3473306], [-21.785575, -43.3470628], [-21.7868345, -43.3460292], [-21.7865335, -43.3456233], [-21.7861167, -43.345061], [-21.7868177, -43.3444702]],
+                {"bubblingMouseEvents": true, "color": "#ffff33", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ffff33", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_2512ba091799df03dbbcb7e0f52dcd7a);
+        
+    
+        var popup_0951063db7065ae989f0f7ccf39cdda3 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a5159c4cdbe551e1322e12a8061677a7 = $(`<div id="html_a5159c4cdbe551e1322e12a8061677a7" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 6</div>`)[0];
+                popup_0951063db7065ae989f0f7ccf39cdda3.setContent(html_a5159c4cdbe551e1322e12a8061677a7);
+            
+        
+
+        poly_line_14597ec37f9ecbe2f38b54bf2d789cf0.bindPopup(popup_0951063db7065ae989f0f7ccf39cdda3)
+        ;
+
+        
+    
+    
+            var poly_line_c77ecd1edf5de58444fd09cad18582eb = L.polyline(
+                [[-21.7868177, -43.3444702], [-21.7861167, -43.345061], [-21.7854436, -43.3456147], [-21.7847774, -43.3461631], [-21.7851832, -43.3467451], [-21.7854101, -43.3470611], [-21.7855778, -43.3473457]],
+                {"bubblingMouseEvents": true, "color": "#ffff33", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ffff33", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_2512ba091799df03dbbcb7e0f52dcd7a);
+        
+    
+        var popup_a8452db7602ac851e62cff407037c81a = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d30c7ed7fc771064260544a024eefa95 = $(`<div id="html_d30c7ed7fc771064260544a024eefa95" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 6</div>`)[0];
+                popup_a8452db7602ac851e62cff407037c81a.setContent(html_d30c7ed7fc771064260544a024eefa95);
+            
+        
+
+        poly_line_c77ecd1edf5de58444fd09cad18582eb.bindPopup(popup_a8452db7602ac851e62cff407037c81a)
+        ;
+
+        
+    
+    
+            var poly_line_adc8bb52e67a4609aac498249ee5a55e = L.polyline(
+                [[-21.7855778, -43.3473457], [-21.785705, -43.3473306], [-21.785575, -43.3470628], [-21.7868345, -43.3460292], [-21.7865335, -43.3456233], [-21.7887025, -43.3441625], [-21.7884025, -43.343727], [-21.7878678, -43.3429924], [-21.7881955, -43.3425336]],
+                {"bubblingMouseEvents": true, "color": "#ffff33", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ffff33", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_2512ba091799df03dbbcb7e0f52dcd7a);
+        
+    
+        var popup_3b50572f4b1a8d6bb6b3ba4df8632c50 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_da810ac6bc4a7eb7f0ea546db5ae4269 = $(`<div id="html_da810ac6bc4a7eb7f0ea546db5ae4269" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 6</div>`)[0];
+                popup_3b50572f4b1a8d6bb6b3ba4df8632c50.setContent(html_da810ac6bc4a7eb7f0ea546db5ae4269);
+            
+        
+
+        poly_line_adc8bb52e67a4609aac498249ee5a55e.bindPopup(popup_3b50572f4b1a8d6bb6b3ba4df8632c50)
+        ;
+
+        
+    
+    
+            var poly_line_e97a65aecd099644519753292fa8458e = L.polyline(
+                [[-21.7881955, -43.3425336], [-21.7892902, -43.3438359], [-21.7894402, -43.3441979], [-21.7895336, -43.3445042], [-21.7888879, -43.3446714], [-21.7868345, -43.3460292], [-21.7865335, -43.3456233], [-21.7861167, -43.345061], [-21.7857694, -43.3445927], [-21.7856518, -43.3445635], [-21.785031, -43.3450743], [-21.7843888, -43.3456028], [-21.7829499, -43.3467903], [-21.7822566, -43.3468285], [-21.779771, -43.346525], [-21.7796564, -43.3465123], [-21.778864, -43.3476496], [-21.7783131, -43.3484509], [-21.7782553, -43.3484492], [-21.7781629, -43.3484251], [-21.7775307, -43.3480004]],
+                {"bubblingMouseEvents": true, "color": "#ffff33", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ffff33", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_2512ba091799df03dbbcb7e0f52dcd7a);
+        
+    
+        var popup_d9d254245996ea341347e8ed1c002a0f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4514a83344d0d9c4321abdd81324c60e = $(`<div id="html_4514a83344d0d9c4321abdd81324c60e" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 6</div>`)[0];
+                popup_d9d254245996ea341347e8ed1c002a0f.setContent(html_4514a83344d0d9c4321abdd81324c60e);
+            
+        
+
+        poly_line_e97a65aecd099644519753292fa8458e.bindPopup(popup_d9d254245996ea341347e8ed1c002a0f)
+        ;
+
+        
+    
+    
+            var poly_line_0f6e83a58d87dc164343badf59a74c3e = L.polyline(
+                [[-21.7775307, -43.3480004], [-21.7774768, -43.347925], [-21.7774528, -43.3478701], [-21.7773887, -43.3478667], [-21.7772855, -43.3478311], [-21.7765486, -43.3473416], [-21.7761893, -43.3478634], [-21.7759669, -43.3481939], [-21.7751173, -43.3493893]],
+                {"bubblingMouseEvents": true, "color": "#ffff33", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ffff33", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_2512ba091799df03dbbcb7e0f52dcd7a);
+        
+    
+        var popup_e94ef36d312447373454ae666549ac09 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_947041b11dd1c760ebdc9426e004047e = $(`<div id="html_947041b11dd1c760ebdc9426e004047e" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 6</div>`)[0];
+                popup_e94ef36d312447373454ae666549ac09.setContent(html_947041b11dd1c760ebdc9426e004047e);
+            
+        
+
+        poly_line_0f6e83a58d87dc164343badf59a74c3e.bindPopup(popup_e94ef36d312447373454ae666549ac09)
+        ;
+
+        
+    
+    
+            var poly_line_d3fda42c8881656856f0c4e5711ed561 = L.polyline(
+                [[-21.7751173, -43.3493893], [-21.7743038, -43.3500451]],
+                {"bubblingMouseEvents": true, "color": "#ffff33", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#ffff33", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_2512ba091799df03dbbcb7e0f52dcd7a);
+        
+    
+        var popup_6d7b93317b4455d8683b91a452b5dd02 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_93cdee0a536c0591162695155c59987b = $(`<div id="html_93cdee0a536c0591162695155c59987b" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 6</div>`)[0];
+                popup_6d7b93317b4455d8683b91a452b5dd02.setContent(html_93cdee0a536c0591162695155c59987b);
+            
+        
+
+        poly_line_d3fda42c8881656856f0c4e5711ed561.bindPopup(popup_6d7b93317b4455d8683b91a452b5dd02)
+        ;
+
+        
+    
+    
+            var marker_bc615b140faf4f0c95de3fc3a5f70a90 = L.marker(
+                [-21.78997, -43.3533213],
+                {
+}
+            ).addTo(feature_group_2512ba091799df03dbbcb7e0f52dcd7a);
+        
+    
+            var icon_079ff3121247a77249394c68e71adb44 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "play",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_693dd32180eb72799e8e4da2938cbe8d = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_6280a094481fc9dd0c391286aba25487 = $(`<div id="html_6280a094481fc9dd0c391286aba25487" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; width: 220px;">                     <b>BAR TORRESMO</b><br>                     📍 Parada 1 de 7<br>                     🍺 Roteiro 6<br>                     📏 Distância total: 4.91 km<br>                     🚶 Modo: DRIVE                 </div>                 </div>`)[0];
+                popup_693dd32180eb72799e8e4da2938cbe8d.setContent(html_6280a094481fc9dd0c391286aba25487);
+            
+        
+
+        marker_bc615b140faf4f0c95de3fc3a5f70a90.bindPopup(popup_693dd32180eb72799e8e4da2938cbe8d)
+        ;
+
+        
+    
+    
+            marker_bc615b140faf4f0c95de3fc3a5f70a90.bindTooltip(
+                `<div>
+                     🏁 INÍCIO: BAR TORRESMO
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_bc615b140faf4f0c95de3fc3a5f70a90.setIcon(icon_079ff3121247a77249394c68e71adb44);
+            
+    
+            var marker_c0a30efce8dfae4e3c9f2affaf60bafc = L.marker(
+                [-21.7867333, -43.34463],
+                {
+}
+            ).addTo(feature_group_2512ba091799df03dbbcb7e0f52dcd7a);
+        
+    
+            var icon_f4543c6351393156911b12e55267a54d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#ffff33",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_ee5711749d6a114964f2594f9a2be3d4 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f199d59a1bf0619322f5313913507908 = $(`<div id="html_f199d59a1bf0619322f5313913507908" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>BAR SANTA MODERACAO</b><br>                 📍 Parada 2 de 7<br>                 🍺 Roteiro 6<br>             </div>             </div>`)[0];
+                popup_ee5711749d6a114964f2594f9a2be3d4.setContent(html_f199d59a1bf0619322f5313913507908);
+            
+        
+
+        marker_c0a30efce8dfae4e3c9f2affaf60bafc.bindPopup(popup_ee5711749d6a114964f2594f9a2be3d4)
+        ;
+
+        
+    
+    
+            marker_c0a30efce8dfae4e3c9f2affaf60bafc.bindTooltip(
+                `<div>
+                     BAR SANTA MODERACAO
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_c0a30efce8dfae4e3c9f2affaf60bafc.setIcon(icon_f4543c6351393156911b12e55267a54d);
+            
+    
+            var marker_d5a9b6e2e0c3b8e441ae18a7caeadde9 = L.marker(
+                [-21.7854816, -43.347486],
+                {
+}
+            ).addTo(feature_group_2512ba091799df03dbbcb7e0f52dcd7a);
+        
+    
+            var icon_184fcbc0387907e530a3439579ddf6ea = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#ffff33",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_715ba3494f3cf7329bc69e81ef79ca42 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c29f712c86775c1bd3bfb26afa9b24ff = $(`<div id="html_c29f712c86775c1bd3bfb26afa9b24ff" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>IBITIBAR</b><br>                 📍 Parada 3 de 7<br>                 🍺 Roteiro 6<br>             </div>             </div>`)[0];
+                popup_715ba3494f3cf7329bc69e81ef79ca42.setContent(html_c29f712c86775c1bd3bfb26afa9b24ff);
+            
+        
+
+        marker_d5a9b6e2e0c3b8e441ae18a7caeadde9.bindPopup(popup_715ba3494f3cf7329bc69e81ef79ca42)
+        ;
+
+        
+    
+    
+            marker_d5a9b6e2e0c3b8e441ae18a7caeadde9.bindTooltip(
+                `<div>
+                     IBITIBAR
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_d5a9b6e2e0c3b8e441ae18a7caeadde9.setIcon(icon_184fcbc0387907e530a3439579ddf6ea);
+            
+    
+            var marker_36e93d1d1d458f5ff1d597983b9bb89f = L.marker(
+                [-21.7885709, -43.3428745],
+                {
+}
+            ).addTo(feature_group_2512ba091799df03dbbcb7e0f52dcd7a);
+        
+    
+            var icon_57ac032cd09277f7647b8360b428cf7a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#ffff33",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_656dba74b1ec961a6e2a16f081eb4abb = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d6c041769c31405cd814ad5998c3b969 = $(`<div id="html_d6c041769c31405cd814ad5998c3b969" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>PAO MOIADO BAR</b><br>                 📍 Parada 4 de 7<br>                 🍺 Roteiro 6<br>             </div>             </div>`)[0];
+                popup_656dba74b1ec961a6e2a16f081eb4abb.setContent(html_d6c041769c31405cd814ad5998c3b969);
+            
+        
+
+        marker_36e93d1d1d458f5ff1d597983b9bb89f.bindPopup(popup_656dba74b1ec961a6e2a16f081eb4abb)
+        ;
+
+        
+    
+    
+            marker_36e93d1d1d458f5ff1d597983b9bb89f.bindTooltip(
+                `<div>
+                     PAO MOIADO BAR
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_36e93d1d1d458f5ff1d597983b9bb89f.setIcon(icon_57ac032cd09277f7647b8360b428cf7a);
+            
+    
+            var marker_43e62dbf70559ba3327ec4bfa2b76205 = L.marker(
+                [-21.7777764, -43.3483018],
+                {
+}
+            ).addTo(feature_group_2512ba091799df03dbbcb7e0f52dcd7a);
+        
+    
+            var icon_91605ec02ff3d501ac0ba949bccda6fb = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#ffff33",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_3954aaba9e36d0c05a60b9d1193f27ff = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_24f3858c51a25c30fa0f137d0b291f7e = $(`<div id="html_24f3858c51a25c30fa0f137d0b291f7e" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>DIRCEUS PUB</b><br>                 📍 Parada 5 de 7<br>                 🍺 Roteiro 6<br>             </div>             </div>`)[0];
+                popup_3954aaba9e36d0c05a60b9d1193f27ff.setContent(html_24f3858c51a25c30fa0f137d0b291f7e);
+            
+        
+
+        marker_43e62dbf70559ba3327ec4bfa2b76205.bindPopup(popup_3954aaba9e36d0c05a60b9d1193f27ff)
+        ;
+
+        
+    
+    
+            marker_43e62dbf70559ba3327ec4bfa2b76205.bindTooltip(
+                `<div>
+                     DIRCEUS PUB
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_43e62dbf70559ba3327ec4bfa2b76205.setIcon(icon_91605ec02ff3d501ac0ba949bccda6fb);
+            
+    
+            var marker_d11bb8a38a62b3958f3440f695a566d2 = L.marker(
+                [-21.7753465, -43.3491994],
+                {
+}
+            ).addTo(feature_group_2512ba091799df03dbbcb7e0f52dcd7a);
+        
+    
+            var icon_7042f3455d458755933a618d71b9e323 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#ffff33",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_e20b840a1efed5e9301f889ce646d772 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_0c861991efe89e7d150448654fa52355 = $(`<div id="html_0c861991efe89e7d150448654fa52355" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>ESPETINHO DA VILLA</b><br>                 📍 Parada 6 de 7<br>                 🍺 Roteiro 6<br>             </div>             </div>`)[0];
+                popup_e20b840a1efed5e9301f889ce646d772.setContent(html_0c861991efe89e7d150448654fa52355);
+            
+        
+
+        marker_d11bb8a38a62b3958f3440f695a566d2.bindPopup(popup_e20b840a1efed5e9301f889ce646d772)
+        ;
+
+        
+    
+    
+            marker_d11bb8a38a62b3958f3440f695a566d2.bindTooltip(
+                `<div>
+                     ESPETINHO DA VILLA
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_d11bb8a38a62b3958f3440f695a566d2.setIcon(icon_7042f3455d458755933a618d71b9e323);
+            
+    
+            var marker_4f8a6a7e5b0b6fc921c888e94351c748 = L.marker(
+                [-21.7745557, -43.3501901],
+                {
+}
+            ).addTo(feature_group_2512ba091799df03dbbcb7e0f52dcd7a);
+        
+    
+            var icon_3758726f934fc8a4fd89f049d86185c6 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "stop",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_09071e4e3502fa0c25d995c6cc861cc6 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a0aff215a638c5b9609d593b694cf0d4 = $(`<div id="html_a0aff215a638c5b9609d593b694cf0d4" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>BUTIQUIM DA FABRICA</b><br>                 📍 Parada 7 de 7<br>                 🍺 Roteiro 6<br>             </div>             </div>`)[0];
+                popup_09071e4e3502fa0c25d995c6cc861cc6.setContent(html_a0aff215a638c5b9609d593b694cf0d4);
+            
+        
+
+        marker_4f8a6a7e5b0b6fc921c888e94351c748.bindPopup(popup_09071e4e3502fa0c25d995c6cc861cc6)
+        ;
+
+        
+    
+    
+            marker_4f8a6a7e5b0b6fc921c888e94351c748.bindTooltip(
+                `<div>
+                     🏁 FIM: BUTIQUIM DA FABRICA
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_4f8a6a7e5b0b6fc921c888e94351c748.setIcon(icon_3758726f934fc8a4fd89f049d86185c6);
+            
+    
+            feature_group_2512ba091799df03dbbcb7e0f52dcd7a.addTo(map_e6a3f6376f3911aea128a1fc27e6f7ed);
+        
+    
+            var feature_group_0a625e19bf6702a286cff6a7ee7939bf = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var poly_line_dbe95f97ba68306ca3b0cceae587efcd = L.polyline(
+                [[-21.7420909, -43.3494464], [-21.7415415, -43.3499399], [-21.7428134, -43.3522626], [-21.74308, -43.3534209], [-21.7432582, -43.3542797], [-21.7427047, -43.3543971], [-21.7416748, -43.354672], [-21.7409433, -43.3548943], [-21.7409025, -43.3550602], [-21.7416979, -43.3548162]],
+                {"bubblingMouseEvents": true, "color": "#a65628", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#a65628", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_0a625e19bf6702a286cff6a7ee7939bf);
+        
+    
+        var popup_59ca55d92d13faf93a9610e8a2d3359a = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_79e9309cdae51b8a4bf1b0c3fbec9f3e = $(`<div id="html_79e9309cdae51b8a4bf1b0c3fbec9f3e" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 7</div>`)[0];
+                popup_59ca55d92d13faf93a9610e8a2d3359a.setContent(html_79e9309cdae51b8a4bf1b0c3fbec9f3e);
+            
+        
+
+        poly_line_dbe95f97ba68306ca3b0cceae587efcd.bindPopup(popup_59ca55d92d13faf93a9610e8a2d3359a)
+        ;
+
+        
+    
+    
+            var poly_line_6cb97e94e819758d39719eba4282ad90 = L.polyline(
+                [[-21.7416979, -43.3548162], [-21.7416748, -43.354672], [-21.7409433, -43.3548943], [-21.7403792, -43.3550495], [-21.7398952, -43.3552337], [-21.7395864, -43.3552996], [-21.7391286, -43.3553908], [-21.7346763, -43.356573], [-21.7335017, -43.3568753], [-21.7326706, -43.3569196], [-21.7322279, -43.3567703]],
+                {"bubblingMouseEvents": true, "color": "#a65628", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#a65628", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_0a625e19bf6702a286cff6a7ee7939bf);
+        
+    
+        var popup_a33d98630a00449f39d5206a4577656f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d5749a41e9afede17813e97ea910a9b3 = $(`<div id="html_d5749a41e9afede17813e97ea910a9b3" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 7</div>`)[0];
+                popup_a33d98630a00449f39d5206a4577656f.setContent(html_d5749a41e9afede17813e97ea910a9b3);
+            
+        
+
+        poly_line_6cb97e94e819758d39719eba4282ad90.bindPopup(popup_a33d98630a00449f39d5206a4577656f)
+        ;
+
+        
+    
+    
+            var poly_line_59cb236ff4de3dc2aed0428c2c93e8f8 = L.polyline(
+                [[-21.7322279, -43.3567703], [-21.7317168, -43.3567136], [-21.7326938, -43.3570137], [-21.7331672, -43.357382], [-21.7333212, -43.3574927], [-21.7343137, -43.357906], [-21.7346912, -43.3582247], [-21.734849, -43.358421], [-21.7349274, -43.3585644], [-21.7348859, -43.3587158], [-21.734695, -43.3588856], [-21.7349249, -43.3589845], [-21.7359713, -43.3597447], [-21.7360046, -43.3598485], [-21.7360081, -43.3598842], [-21.7360508, -43.3599085], [-21.7361513, -43.3599834], [-21.7367224, -43.3610113]],
+                {"bubblingMouseEvents": true, "color": "#a65628", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#a65628", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_0a625e19bf6702a286cff6a7ee7939bf);
+        
+    
+        var popup_cb64a1e500feeab5cd47c42d2222c33f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0f2fe1274114c84ac72ad07ed6b91ed4 = $(`<div id="html_0f2fe1274114c84ac72ad07ed6b91ed4" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 7</div>`)[0];
+                popup_cb64a1e500feeab5cd47c42d2222c33f.setContent(html_0f2fe1274114c84ac72ad07ed6b91ed4);
+            
+        
+
+        poly_line_59cb236ff4de3dc2aed0428c2c93e8f8.bindPopup(popup_cb64a1e500feeab5cd47c42d2222c33f)
+        ;
+
+        
+    
+    
+            var poly_line_a64f1145444b5ccc94c02b86768c7c36 = L.polyline(
+                [[-21.7367224, -43.3610113], [-21.7361513, -43.3599834], [-21.7360896, -43.3598571], [-21.7360587, -43.359817], [-21.7359713, -43.3597447], [-21.7349249, -43.3589845], [-21.7348859, -43.3587158], [-21.7349274, -43.3585644], [-21.7349877, -43.3584543], [-21.7350219, -43.358228], [-21.734802, -43.3580839], [-21.7343137, -43.357906], [-21.7333212, -43.3574927], [-21.7332196, -43.3573639], [-21.7329155, -43.3570576], [-21.7326706, -43.3569196], [-21.7322279, -43.3567703], [-21.7317168, -43.3567136], [-21.7311485, -43.3566783], [-21.7304914, -43.3566516], [-21.7299237, -43.3565707], [-21.7292544, -43.356523], [-21.728042, -43.3563414], [-21.7276602, -43.3562688], [-21.7275106, -43.3563557], [-21.7267423, -43.3563979], [-21.7238094, -43.3555861], [-21.7233047, -43.3554211], [-21.7225528, -43.3552673], [-21.7221617, -43.3551862], [-21.7219029, -43.3547275], [-21.7215422, -43.3547685]],
+                {"bubblingMouseEvents": true, "color": "#a65628", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#a65628", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_0a625e19bf6702a286cff6a7ee7939bf);
+        
+    
+        var popup_8738eebe2b21b7d838df1178d376bf8b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b8c271db4513f0d9d8402cb85dc90b02 = $(`<div id="html_b8c271db4513f0d9d8402cb85dc90b02" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 7</div>`)[0];
+                popup_8738eebe2b21b7d838df1178d376bf8b.setContent(html_b8c271db4513f0d9d8402cb85dc90b02);
+            
+        
+
+        poly_line_a64f1145444b5ccc94c02b86768c7c36.bindPopup(popup_8738eebe2b21b7d838df1178d376bf8b)
+        ;
+
+        
+    
+    
+            var marker_37ce0f268079b05367ddf83058e5cceb = L.marker(
+                [-21.7418419, -43.3494793],
+                {
+}
+            ).addTo(feature_group_0a625e19bf6702a286cff6a7ee7939bf);
+        
+    
+            var icon_49fcae3aebf1bac579f47560c996cd6c = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "play",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_429c454e7e43a975aef7b3745d168b98 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_7376216924dc56729c750aeee2b66478 = $(`<div id="html_7376216924dc56729c750aeee2b66478" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; width: 220px;">                     <b>BAR DU BUNECO</b><br>                     📍 Parada 1 de 5<br>                     🍺 Roteiro 7<br>                     📏 Distância total: 4.77 km<br>                     🚶 Modo: DRIVE                 </div>                 </div>`)[0];
+                popup_429c454e7e43a975aef7b3745d168b98.setContent(html_7376216924dc56729c750aeee2b66478);
+            
+        
+
+        marker_37ce0f268079b05367ddf83058e5cceb.bindPopup(popup_429c454e7e43a975aef7b3745d168b98)
+        ;
+
+        
+    
+    
+            marker_37ce0f268079b05367ddf83058e5cceb.bindTooltip(
+                `<div>
+                     🏁 INÍCIO: BAR DU BUNECO
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_37ce0f268079b05367ddf83058e5cceb.setIcon(icon_49fcae3aebf1bac579f47560c996cd6c);
+            
+    
+            var marker_2a34d258fd7cd362a5edc5a15b99b141 = L.marker(
+                [-21.7416711, -43.3549644],
+                {
+}
+            ).addTo(feature_group_0a625e19bf6702a286cff6a7ee7939bf);
+        
+    
+            var icon_fb47d42ec8b1578104548f828a8bb0e9 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#a65628",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_89a4d1c88eddda40972252a412852c8e = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_8eeee805d9343dec718a7d1d372ffc5a = $(`<div id="html_8eeee805d9343dec718a7d1d372ffc5a" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>LERO LERO</b><br>                 📍 Parada 2 de 5<br>                 🍺 Roteiro 7<br>             </div>             </div>`)[0];
+                popup_89a4d1c88eddda40972252a412852c8e.setContent(html_8eeee805d9343dec718a7d1d372ffc5a);
+            
+        
+
+        marker_2a34d258fd7cd362a5edc5a15b99b141.bindPopup(popup_89a4d1c88eddda40972252a412852c8e)
+        ;
+
+        
+    
+    
+            marker_2a34d258fd7cd362a5edc5a15b99b141.bindTooltip(
+                `<div>
+                     LERO LERO
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_2a34d258fd7cd362a5edc5a15b99b141.setIcon(icon_fb47d42ec8b1578104548f828a8bb0e9);
+            
+    
+            var marker_8239026c05d23d48a009fdad5e9068b3 = L.marker(
+                [-21.7319617, -43.3568702],
+                {
+}
+            ).addTo(feature_group_0a625e19bf6702a286cff6a7ee7939bf);
+        
+    
+            var icon_eba432614ab9c08f1cde8c899224dc74 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#a65628",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_54217404107fb9809162548e78628f75 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_43a8fadd85974c604ed61c21e91c3060 = $(`<div id="html_43a8fadd85974c604ed61c21e91c3060" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>BUDEGA DO PAPAI</b><br>                 📍 Parada 3 de 5<br>                 🍺 Roteiro 7<br>             </div>             </div>`)[0];
+                popup_54217404107fb9809162548e78628f75.setContent(html_43a8fadd85974c604ed61c21e91c3060);
+            
+        
+
+        marker_8239026c05d23d48a009fdad5e9068b3.bindPopup(popup_54217404107fb9809162548e78628f75)
+        ;
+
+        
+    
+    
+            marker_8239026c05d23d48a009fdad5e9068b3.bindTooltip(
+                `<div>
+                     BUDEGA DO PAPAI
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_8239026c05d23d48a009fdad5e9068b3.setIcon(icon_eba432614ab9c08f1cde8c899224dc74);
+            
+    
+            var marker_738a791cc1f65415a7313b6bc054a4e3 = L.marker(
+                [-21.7365987, -43.3609957],
+                {
+}
+            ).addTo(feature_group_0a625e19bf6702a286cff6a7ee7939bf);
+        
+    
+            var icon_6e76203e814cac45dfa8af1840c3cc54 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#a65628",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_c1378aebf929f07ef4c7d6546be3d61b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_495bcc1d3626c8b49bad44d85711d1e7 = $(`<div id="html_495bcc1d3626c8b49bad44d85711d1e7" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>BAR DIAS</b><br>                 📍 Parada 4 de 5<br>                 🍺 Roteiro 7<br>             </div>             </div>`)[0];
+                popup_c1378aebf929f07ef4c7d6546be3d61b.setContent(html_495bcc1d3626c8b49bad44d85711d1e7);
+            
+        
+
+        marker_738a791cc1f65415a7313b6bc054a4e3.bindPopup(popup_c1378aebf929f07ef4c7d6546be3d61b)
+        ;
+
+        
+    
+    
+            marker_738a791cc1f65415a7313b6bc054a4e3.bindTooltip(
+                `<div>
+                     BAR DIAS
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_738a791cc1f65415a7313b6bc054a4e3.setIcon(icon_6e76203e814cac45dfa8af1840c3cc54);
+            
+    
+            var marker_933c95add4e4bbe97ddfa68c9ebfcc55 = L.marker(
+                [-21.7216065, -43.3546633],
+                {
+}
+            ).addTo(feature_group_0a625e19bf6702a286cff6a7ee7939bf);
+        
+    
+            var icon_1ed61f685fcb722f167c019e7e01d12d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "stop",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_7e5096043f9f49d8aedcdeb24c3cf6b4 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_830c5834cf99f8f8fabf3ba626301ff9 = $(`<div id="html_830c5834cf99f8f8fabf3ba626301ff9" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>COMPADRE GRILL COSTELARIA</b><br>                 📍 Parada 5 de 5<br>                 🍺 Roteiro 7<br>             </div>             </div>`)[0];
+                popup_7e5096043f9f49d8aedcdeb24c3cf6b4.setContent(html_830c5834cf99f8f8fabf3ba626301ff9);
+            
+        
+
+        marker_933c95add4e4bbe97ddfa68c9ebfcc55.bindPopup(popup_7e5096043f9f49d8aedcdeb24c3cf6b4)
+        ;
+
+        
+    
+    
+            marker_933c95add4e4bbe97ddfa68c9ebfcc55.bindTooltip(
+                `<div>
+                     🏁 FIM: COMPADRE GRILL COSTELARIA
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_933c95add4e4bbe97ddfa68c9ebfcc55.setIcon(icon_1ed61f685fcb722f167c019e7e01d12d);
+            
+    
+            feature_group_0a625e19bf6702a286cff6a7ee7939bf.addTo(map_e6a3f6376f3911aea128a1fc27e6f7ed);
+        
+    
+            var feature_group_06b356ed68fc869c053ba1afbe074ec9 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var poly_line_3de1eeea25441577c0c3445345f065a2 = L.polyline(
+                [[-21.6901048, -43.433633], [-21.6898986, -43.4330257], [-21.6898577, -43.4329063], [-21.6885335, -43.433411], [-21.6879432, -43.4337892], [-21.6884362, -43.4335923], [-21.688631, -43.4341934]],
+                {"bubblingMouseEvents": true, "color": "#377eb8", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#377eb8", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_06b356ed68fc869c053ba1afbe074ec9);
+        
+    
+        var popup_e2472841e7cefec526d5a0971e4c9ca0 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_1b22b431e8f74b020c8f4d419c724c06 = $(`<div id="html_1b22b431e8f74b020c8f4d419c724c06" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 2</div>`)[0];
+                popup_e2472841e7cefec526d5a0971e4c9ca0.setContent(html_1b22b431e8f74b020c8f4d419c724c06);
+            
+        
+
+        poly_line_3de1eeea25441577c0c3445345f065a2.bindPopup(popup_e2472841e7cefec526d5a0971e4c9ca0)
+        ;
+
+        
+    
+    
+            var poly_line_3d1423ffe0848c7362d0cfc55896d8fc = L.polyline(
+                [[-21.688631, -43.4341934], [-21.6881303, -43.4343803], [-21.687258, -43.4346793], [-21.687066, -43.4341137], [-21.6864849, -43.4341939], [-21.6861889, -43.434311], [-21.6858678, -43.4345511], [-21.685868, -43.4359141]],
+                {"bubblingMouseEvents": true, "color": "#377eb8", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#377eb8", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(feature_group_06b356ed68fc869c053ba1afbe074ec9);
+        
+    
+        var popup_4c51611422ff01fdd2b65eb60c6f804f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_1e3d3c85cc95c6170afc36c0b308bb77 = $(`<div id="html_1e3d3c85cc95c6170afc36c0b308bb77" style="width: 100.0%; height: 100.0%;">Trecho do Roteiro 2</div>`)[0];
+                popup_4c51611422ff01fdd2b65eb60c6f804f.setContent(html_1e3d3c85cc95c6170afc36c0b308bb77);
+            
+        
+
+        poly_line_3d1423ffe0848c7362d0cfc55896d8fc.bindPopup(popup_4c51611422ff01fdd2b65eb60c6f804f)
+        ;
+
+        
+    
+    
+            var marker_b6777d711ffe1d5be770f237d5d06f65 = L.marker(
+                [-21.6900456, -43.4338592],
+                {
+}
+            ).addTo(feature_group_06b356ed68fc869c053ba1afbe074ec9);
+        
+    
+            var icon_86841f632fcf6c9ee4b9717e9ab02274 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "play",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_16d1f231a1baf51900692b7021d28430 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d889494febfcb0ee24c34bda01ee6dda = $(`<div id="html_d889494febfcb0ee24c34bda01ee6dda" style="width: 100.0%; height: 100.0%;">                 <div style="font-family: Arial; width: 220px;">                     <b>NOSSO BAR JF</b><br>                     📍 Parada 1 de 3<br>                     🍺 Roteiro 2<br>                     📏 Distância total: 0.95 km<br>                     🚶 Modo: DRIVE                 </div>                 </div>`)[0];
+                popup_16d1f231a1baf51900692b7021d28430.setContent(html_d889494febfcb0ee24c34bda01ee6dda);
+            
+        
+
+        marker_b6777d711ffe1d5be770f237d5d06f65.bindPopup(popup_16d1f231a1baf51900692b7021d28430)
+        ;
+
+        
+    
+    
+            marker_b6777d711ffe1d5be770f237d5d06f65.bindTooltip(
+                `<div>
+                     🏁 INÍCIO: NOSSO BAR JF
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_b6777d711ffe1d5be770f237d5d06f65.setIcon(icon_86841f632fcf6c9ee4b9717e9ab02274);
+            
+    
+            var marker_e13c3b098a1e22fcb9356ed0f48bab5e = L.marker(
+                [-21.6885565, -43.4341042],
+                {
+}
+            ).addTo(feature_group_06b356ed68fc869c053ba1afbe074ec9);
+        
+    
+            var icon_65961965873752a35732ca0671f9a4c8 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "#377eb8",
+  "iconColor": "white",
+  "icon": "beer",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_59feee8b0b4b101dc733859ee104c6c0 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_8cdc79e0339179ec71be4e5ddc1eced4 = $(`<div id="html_8cdc79e0339179ec71be4e5ddc1eced4" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>COLISEUM BAR</b><br>                 📍 Parada 2 de 3<br>                 🍺 Roteiro 2<br>             </div>             </div>`)[0];
+                popup_59feee8b0b4b101dc733859ee104c6c0.setContent(html_8cdc79e0339179ec71be4e5ddc1eced4);
+            
+        
+
+        marker_e13c3b098a1e22fcb9356ed0f48bab5e.bindPopup(popup_59feee8b0b4b101dc733859ee104c6c0)
+        ;
+
+        
+    
+    
+            marker_e13c3b098a1e22fcb9356ed0f48bab5e.bindTooltip(
+                `<div>
+                     COLISEUM BAR
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_e13c3b098a1e22fcb9356ed0f48bab5e.setIcon(icon_65961965873752a35732ca0671f9a4c8);
+            
+    
+            var marker_6f893ee94a06273edd8fe2bea05ea330 = L.marker(
+                [-21.6853665, -43.4362092],
+                {
+}
+            ).addTo(feature_group_06b356ed68fc869c053ba1afbe074ec9);
+        
+    
+            var icon_747e28dc20f70e826c787c0e3402c4b4 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "stop",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_4462eff6e5337c9728aada180b7c66e5 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_14e5b1faf691326ce64d456881c0da56 = $(`<div id="html_14e5b1faf691326ce64d456881c0da56" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial; width: 220px;">                 <b>BAR DO BREJO</b><br>                 📍 Parada 3 de 3<br>                 🍺 Roteiro 2<br>             </div>             </div>`)[0];
+                popup_4462eff6e5337c9728aada180b7c66e5.setContent(html_14e5b1faf691326ce64d456881c0da56);
+            
+        
+
+        marker_6f893ee94a06273edd8fe2bea05ea330.bindPopup(popup_4462eff6e5337c9728aada180b7c66e5)
+        ;
+
+        
+    
+    
+            marker_6f893ee94a06273edd8fe2bea05ea330.bindTooltip(
+                `<div>
+                     🏁 FIM: BAR DO BREJO
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_6f893ee94a06273edd8fe2bea05ea330.setIcon(icon_747e28dc20f70e826c787c0e3402c4b4);
+            
+    
+            feature_group_06b356ed68fc869c053ba1afbe074ec9.addTo(map_e6a3f6376f3911aea128a1fc27e6f7ed);
+        
+    
+            var layer_control_5ffdcd399439d5c969bc1adf8e4c00cb_layers = {
+                base_layers : {
+                    "cartodbpositron" : tile_layer_9d7ebb93a9688f67cc44042600336d02,
+                    "Mapa Escuro" : tile_layer_50ad6cbf8bd8c945c8e09e6f2c37268f,
+                },
+                overlays :  {
+                    "Roteiro 5 - 2 bares" : feature_group_fa836d6fab353410e9a9e5be2d3a90d3,
+                    "Roteiro 1 - 9 bares" : feature_group_604bddd22873c4278256aeaed8e7e073,
+                    "Roteiro 3 - 7 bares" : feature_group_afde25b6e6fb44c60e8e5921f8fc081d,
+                    "Roteiro 4 - 7 bares" : feature_group_8bbec1678a26c27032fb124651221080,
+                    "Roteiro 6 - 7 bares" : feature_group_2512ba091799df03dbbcb7e0f52dcd7a,
+                    "Roteiro 7 - 5 bares" : feature_group_0a625e19bf6702a286cff6a7ee7939bf,
+                    "Roteiro 2 - 3 bares" : feature_group_06b356ed68fc869c053ba1afbe074ec9,
+                },
+            };
+            let layer_control_5ffdcd399439d5c969bc1adf8e4c00cb = L.control.layers(
+                layer_control_5ffdcd399439d5c969bc1adf8e4c00cb_layers.base_layers,
+                layer_control_5ffdcd399439d5c969bc1adf8e4c00cb_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": true,
+  "autoZIndex": true,
+}
+            ).addTo(map_e6a3f6376f3911aea128a1fc27e6f7ed);
+
+        
+    
+            var measure_control_62aec4cbad036a3437eb20bf21519af5 = new L.Control.Measure(
+                {
+  "position": "topright",
+  "primaryLengthUnit": "meters",
+  "secondaryLengthUnit": "miles",
+  "primaryAreaUnit": "sqmeters",
+  "secondaryAreaUnit": "acres",
+});
+            map_e6a3f6376f3911aea128a1fc27e6f7ed.addControl(measure_control_62aec4cbad036a3437eb20bf21519af5);
+
+            // Workaround for using this plugin with Leaflet>=1.8.0
+            // https://github.com/ljagis/leaflet-measure/issues/171
+            L.Control.Measure.include({
+                _setCaptureMarkerIcon: function () {
+                    // disable autopan
+                    this._captureMarker.options.autoPanOnFocus = false;
+                    // default function
+                    this._captureMarker.setIcon(
+                        L.divIcon({
+                            iconSize: this._map.getSize().multiplyBy(2)
+                        })
+                    );
+                },
+            });
+
+        
+    
+            L.control.fullscreen(
+                {
+  "position": "topleft",
+  "title": "Full Screen",
+  "titleCancel": "Exit Full Screen",
+  "forceSeparateButton": false,
+}
+            ).addTo(map_e6a3f6376f3911aea128a1fc27e6f7ed);
+        
+</script>
+</html>
