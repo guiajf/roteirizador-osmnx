@@ -1,0 +1,834 @@
+# Roteamento com *Osmnx* e *NetworkX*
+
+### Introdução
+
+Sobre o mesmo tema, publicamos um [artigo](https://github.com/guiajf/roteiro-butecos) em que discorremos sobre o desenvolvimento de roteiros simplificados, calculados de acordo com a distância euclidiana ou de haversine, em linha reta, com técnicas apropriadas para a realização de agrupamentos baseados em proximidade geográfica e otimização baseada na variante aberta do *Problema do Caixeiro Viajante*.
+
+Nos próximos três artigos da série, a que damos início, intentamos que as rotas obedeçam à geometria das ruas, seguindo exatamente o traçado das vias.Para isso, exploramos inicialmente, as funcionalidades do pacote **Osmnx** em conjunto com **NetworkX** , depois a **API** do **OpenRouteService(ORS)** e finalmente a solução de roteamento **Open Source Routing Machine(OSRM)**.
+
+As vantagens do **Osmnx** são:  integração nativa com o **NetworkX** para análise de grafos, não exige chave **API**, oferece quantilidade ilimitada de requisições, possui precisão muito alta e fornece os modos de percurso *walk*, *drive* e *bike*. Além disso, com o *Osmnx* você baixa o grafo uma vez por *cluster* e reutiliza para todos os cálculos de distância e rotas, tornando o processo mais eficiente.
+
+Entretanto, o **Osmnx** é realmente pesado para máquinas com recursos limitados,  porque ele baixa e processa grafos inteiros de ruas (milhares de *nós* e *arestas*) na memória.
+
+Para superar esse desafio, recomenda-se o uso do **OSRM**, que é muito mais leve porque não baixa o grafo completo, faz requisições pontuais à **API** e o processamento é feito no servidor. Entretanto, por se tratar de uma infraestrutura pública, o usuário tem que conviver com limitações de disponibilidade e sobrecarga  nos horários de pico.
+
+A solução intermediária integra o uso do **ORS**, que utiliza rotas reais baseadas na infraestrutura viária do *OpenStreetMap*. A principal vantagem do **ORS** é a qualidade dos dados e a riqueza dos metadados fornecidos, incluindo geometria detalhada das rotas, altitudes e instruções passo a passo. Contudo, exige a obtenção de chave de **API**, impoẽ limites diários de requisições para contas gratuitas e uma política de segurança que exige cabeçalhos HTTP específicos.
+
+Nos próximos artigos, analisaremos detalhadamente cada uma dessas três abordagens, a começar pelo **OSMnx** em conjunto com o **NetworkX**, depois avançamos para a solução intermediária com o **ORS** e concluímos com a abordagem mais leve baseada no **OSRM**.
+
+
+
+
+
+
+
+
+### Bibliotecas
+
+Carregamos as seguintes bibliotecas:
+
+- **pandas**: biblioteca fundamental para análise de dados em Python,
+oferece estruturas como DataFrame e Series para manipulação e
+análise de dados tabulares. Neste projeto, é utilizada para
+carregar e inspecionar a lista dos 40 bares participantes.
+
+- **numpy**: pacote essencial para computação científica, fornece
+suporte a arrays multidimensionais e funções matemáticas de
+alto desempenho. Utilizado para converter coordenadas e gerenciar
+a matriz de distâncias.
+
+- **osmnx**: biblioteca especializada para modelagem de redes urbanas
+a partir de dados do OpenStreetMap. Permite baixar grafos viários
+reais e calcular rotas. Utilizada para obter a rede de ruas de
+Juiz de Fora (raio de 30 km) e calcular caminhos mais curtos.
+
+- **networkx**: biblioteca robusta para criação e análise de grafos.
+Fornece implementações de algoritmos como Dijkstra e shortest path.
+Empregada indiretamente pelo OSMnx para navegação no grafo viário.
+
+- **folium**: biblioteca para visualização geoespacial interativa,
+baseada em *Leaflet.js*. Plugins *Fullscreen* e *MeasureControl*
+adicionam tela cheia e ferramenta de medição ao mapa.
+
+- **sklearn.neighbors**: módulo especializado em busca por vizinhos
+próximos. Implementa algoritmo *ball_tree* para consultas eficientes.
+Utilizado para:
+    a) agrupar bares em clusters por proximidade geográfica
+    b) implementar a heurística gulosa do *vizinho mais próximo*,
+       resolvendo o **TSP** aberto dentro de cada cluster.
+
+- **matplotlib**: biblioteca fundamental para visualização de dados.
+Utilizada indiretamente pelo OSMnx para plotagem, mas seu módulo
+pyplot não é chamado explicitamente no código.
+
+- **warnings**: módulo da biblioteca padrão para controle de mensagens
+de aviso. Utilizado para suprimir alertas técnicos e manter a
+saída limpa e focada nos resultados.
+
+
+```python
+import pandas as pd
+import numpy as np
+import osmnx as ox
+import networkx as nx
+import folium
+from sklearn.cluster import KMeans
+from sklearn.neighbors import NearestNeighbors
+from folium.plugins import MeasureControl, Fullscreen
+import warnings
+warnings.filterwarnings('ignore')
+
+```
+
+### Carregamos e inspecionamos os dados
+
+**Carregamos o dataset**
+
+
+```python
+gdf = pd.read_csv("lista_bares.csv")
+X = np.array(gdf[['latitude', 'longitude']])
+```
+
+**Inspecionamos os dados**
+
+
+```python
+print("=== Informações do dataset ===\n")
+gdf.info()
+
+print("\n=== Primeiras 5 coordenadas (lat, lon) ===\n")
+print(X[:5])
+
+print(f"\nTotal de bares carregados: {len(gdf)}")
+print(f"Colunas disponíveis: {list(gdf.columns)}")
+```
+
+    === Informações do dataset ===
+    
+    <class 'pandas.DataFrame'>
+    RangeIndex: 40 entries, 0 to 39
+    Data columns (total 9 columns):
+     #   Column         Non-Null Count  Dtype  
+    ---  ------         --------------  -----  
+     0   Name           40 non-null     str    
+     1   longitude      40 non-null     float64
+     2   latitude       40 non-null     float64
+     3   Endereço       40 non-null     str    
+     4   Petisco        40 non-null     str    
+     5   Contato        40 non-null     str    
+     6   Instagram      40 non-null     str    
+     7   Descrição      40 non-null     str    
+     8   Funcionamento  40 non-null     str    
+    dtypes: float64(2), str(7)
+    memory usage: 2.9 KB
+    
+    === Primeiras 5 coordenadas (lat, lon) ===
+    
+    [[-21.7819995 -43.2989666]
+     [-21.7365987 -43.3609957]
+     [-21.7586111 -43.3472222]
+     [-21.766567  -43.3723106]
+     [-21.7756168 -43.378489 ]]
+    
+    Total de bares carregados: 40
+    Colunas disponíveis: ['Name', 'longitude', 'latitude', 'Endereço', 'Petisco', 'Contato', 'Instagram', 'Descrição', 'Funcionamento']
+
+
+### Definimos o roteiro mais curto
+
+A classe *NearestNeighbors*, do módulo *sklearn.neighbors*, juntamente com o algoritmo *ball_tree*, fornece uma solução compatível para problemas de busca por proximidade, como o de roteamento entre pontos geográficos.
+
+Essa abordagem foi adotada por sua simplicidade e eficiência ao lidar com 40 pontos, apresentando uma complexidade computacional de *O(n²)*, perfeitamente adequada para essa escala.
+
+Embora não assegure uma solução matemática ideal, pois o *Problema do Caixeiro Viajante* é classificado como **NP-difícil**, o método entrega um resultado prático, rápido e satisfatório para o contexto proposto.
+
+O termo "NP-difícil" significa que, para instâncias grandes do problema, não se conhece algoritmo capaz de encontrar a solução exata em tempo polinomial (ou seja, em um tempo que cresça de maneira gerenciável com o número de cidades). Para encontrar a solução exata, seria necessário avaliar todas as 40! combinações possíveis, o que equivale a aproximadamente 8 × 10⁴⁵ rotas (o número 8 seguido de 45 zeros). Mesmo os computadores mais rápidos levariam um tempo incomensurável para completar essa tarefa.
+
+É precisamente por essa inviabilidade computacional que se justifica o uso de heurísticas, como a do vizinho mais próximo, que sacrificam a garantia de otimalidade em favor da eficiência prática.
+
+Um ponto de início (Ponto 0 - ADEGA BAR) foi definido para que o algoritmo principal construa a rota, adicionando o vizinho mais próximo ainda não visitado até atingir o ponto de destino ou visitar todos os pontos.
+
+A saída mostra a sequência de bares a serem visitados na rota calculada.
+
+
+```python
+# Calcular a distância para cada par de pontos consecutivos
+
+bares = gdf['Name']
+nbrs = NearestNeighbors(n_neighbors=len(X), algorithm='ball_tree').fit(X)
+distances, indices = nbrs.kneighbors(X)
+
+# Encontrar o roteiro mais curto
+visited = np.zeros(len(X), dtype=bool)
+
+end_point = 5  # Definindo o ponto final como 13 (Casa d'Itália)
+
+visited[0] = True
+tour = [0]
+current = 0
+
+# Modificado para parar quando chegar ao ponto 39
+while current != end_point and len(tour) < len(X):
+    unvisited_mask = np.logical_not(visited[indices[current]])
+    if np.any(unvisited_mask):
+        nearest = indices[current][unvisited_mask][0].item()
+    else:
+        # Se todos os vizinhos foram visitados, escolha o próximo não visitado
+        unvisited = np.where(visited == False)[0]
+        if len(unvisited) > 0:
+            nearest = unvisited[0]
+        else:
+            break
+    
+    tour.append(nearest)
+    visited[nearest] = True
+    current = nearest
+
+    # Se chegou ao ponto final, pare
+    if current == end_point:
+        break
+
+# Resultado
+print("Rota mais curta terminando no item 5:")
+for i, point in enumerate(tour):
+    print(f"{i}. {bares[point]} (Ponto {point})")
+
+```
+
+    Rota mais curta terminando no item 5:
+    0. ADEGA BAR (Ponto 0)
+    1. RECANTO DOS MANACAS (Ponto 35)
+    2. EMPORIO DO SABOR (Ponto 26)
+    3. VARANDA RESTO BEER (Ponto 38)
+    4. PAPPADOG BAR (Ponto 33)
+    5. CAMINHO DA ROCA (Ponto 19)
+    6. BAR DO ABILIO (Ponto 2)
+    7. SUPER LAZIN (Ponto 37)
+    8. CASARAO BAR (Ponto 21)
+    9. BAR BATATA D'MOLA (Ponto 14)
+    10. BAR DO MARQUIM (Ponto 7)
+    11. REZA FORTE (Ponto 36)
+    12. INFORMAL BAR & RESTAURANTE (Ponto 29)
+    13. BIROSCA BAR E RESTAURANTE (Ponto 15)
+    14. BAR DO PASSARINHO (Ponto 8)
+    15. ZAKAS GASTRO BEER (Ponto 39)
+    16. BAR DO ANTONIO (Ponto 3)
+    17. BAR DO JORGE (Ponto 6)
+    18. BUTECO DO PRINCIPE (Ponto 17)
+    19. BAR DO BENE (Ponto 4)
+    20. PETISQUEIRA (Ponto 34)
+    21. DON JUAN GASTRONOMIA E EVENTOS (Ponto 25)
+    22. BAR DO TIAO (Ponto 9)
+    23. BAR TORRESMO (Ponto 10)
+    24. IBITIBAR (Ponto 28)
+    25. BAR SANTA MODERACAO (Ponto 13)
+    26. PAO MOIADO BAR (Ponto 32)
+    27. DIRCEUS PUB (Ponto 24)
+    28. ESPETINHO DA VILLA (Ponto 27)
+    29. BUTIQUIM DA FABRICA (Ponto 18)
+    30. BAR DU CHICO (Ponto 12)
+    31. CARLOTA (Ponto 20)
+    32. BAR DU BUNECO (Ponto 11)
+    33. LERO LERO (Ponto 30)
+    34. BAR DIAS (Ponto 1)
+    35. BUDEGA DO PAPAI (Ponto 16)
+    36. COMPADRE GRILL COSTELARIA (Ponto 23)
+    37. NOSSO BAR JF (Ponto 31)
+    38. COLISEUM BAR (Ponto 22)
+    39. BAR DO BREJO (Ponto 5)
+
+
+**Criamos o dicionário das coordenadas**
+
+
+```python
+# Versão concisa usando dict comprehension
+coordenadas_referencia = {row['Name']: (row['latitude'], row['longitude']) 
+                          for idx, row in gdf.iterrows()}
+
+# Nomes dos locais na ordem original
+bares = gdf['Name'].tolist()  
+
+# Ordenar o dicionário conforme a rota
+coordenadas_ordenadas = {
+    bares[i]: coordenadas_referencia[bares[i]] 
+    for i in tour
+}
+
+print(coordenadas_ordenadas)
+```
+
+    {'ADEGA BAR': (-21.7819995, -43.2989666), 'RECANTO DOS MANACAS': (-21.7739006, -43.309326), 'EMPORIO DO SABOR': (-21.7683638, -43.3281789), 'VARANDA RESTO BEER': (-21.7687003, -43.3436456), 'PAPPADOG BAR': (-21.764711, -43.3445232), 'CAMINHO DA ROCA': (-21.7632591, -43.3454451), 'BAR DO ABILIO': (-21.7586111, -43.3472222), 'SUPER LAZIN': (-21.757916, -43.341287), 'CASARAO BAR': (-21.7554517, -43.3399353), "BAR BATATA D'MOLA": (-21.7541569, -43.3521957), 'BAR DO MARQUIM': (-21.7534911, -43.3533205), 'REZA FORTE': (-21.752821, -43.357038), 'INFORMAL BAR & RESTAURANTE': (-21.752784, -43.358278), 'BIROSCA BAR E RESTAURANTE': (-21.7536439, -43.3586749), 'BAR DO PASSARINHO': (-21.7498068, -43.3680499), 'ZAKAS GASTRO BEER': (-21.755112, -43.37624), 'BAR DO ANTONIO': (-21.766567, -43.3723106), 'BAR DO JORGE': (-21.7672931, -43.3688659), 'BUTECO DO PRINCIPE': (-21.7717784, -43.3752646), 'BAR DO BENE': (-21.7756168, -43.378489), 'PETISQUEIRA': (-21.7889633, -43.3784154), 'DON JUAN GASTRONOMIA E EVENTOS': (-21.789056, -43.3810512), 'BAR DO TIAO': (-21.7882238, -43.3831797), 'BAR TORRESMO': (-21.78997, -43.3533213), 'IBITIBAR': (-21.7854816, -43.347486), 'BAR SANTA MODERACAO': (-21.7867333, -43.34463), 'PAO MOIADO BAR': (-21.7885709, -43.3428745), 'DIRCEUS PUB': (-21.7777764, -43.3483018), 'ESPETINHO DA VILLA': (-21.7753465, -43.3491994), 'BUTIQUIM DA FABRICA': (-21.7745557, -43.3501901), 'BAR DU CHICO': (-21.7652098, -43.3536869), 'CARLOTA': (-21.764565, -43.3521346), 'BAR DU BUNECO': (-21.7418419, -43.3494793), 'LERO LERO': (-21.7416711, -43.3549644), 'BAR DIAS': (-21.7365987, -43.3609957), 'BUDEGA DO PAPAI': (-21.7319617, -43.3568702), 'COMPADRE GRILL COSTELARIA': (-21.7216065, -43.3546633), 'NOSSO BAR JF': (-21.6900456, -43.4338592), 'COLISEUM BAR': (-21.6885565, -43.4341042), 'BAR DO BREJO': (-21.6853665, -43.4362092)}
+
+
+### Criamos os roteiros por proximidade com Osmnx
+
+
+```python
+# Modo de transporte: 'walk' (pedestre) ou 'drive' (carro)
+MODO_TRANSPORTE = 'drive'  # Altere para 'drive' se quiser rotas de carro
+
+# Distância máxima para baixar o grafo (em metros)
+# Aumente se os bares estiverem mais distantes
+DISTANCIA_GRAFO = 30000  # 2km ao redor do centro
+
+# Número de roteiros (clusters)
+NUMERO_ROTEIROS = 7
+
+print(f"\n⚙️ Configurações:")
+print(f"   Modo de transporte: {MODO_TRANSPORTE.upper()}")
+print(f"   Raio do grafo: {DISTANCIA_GRAFO} m")
+print(f"   Número de roteiros: {NUMERO_ROTEIROS}")
+
+```
+
+    
+    ⚙️ Configurações:
+       Modo de transporte: DRIVE
+       Raio do grafo: 30000 m
+       Número de roteiros: 7
+
+
+### Definimos a função para *clustering*
+
+
+```python
+def clusterizar_bares(coordenadas, n_clusters=4):
+    """
+    Agrupa os bares em clusters baseado na proximidade geográfica
+    """
+    nomes = list(coordenadas.keys())
+    coords = np.array(list(coordenadas.values()))
+    
+    kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
+    labels = kmeans.fit_predict(coords)
+    
+    clusters = {}
+    for i, nome in enumerate(nomes):
+        cluster_id = labels[i]
+        if cluster_id not in clusters:
+            clusters[cluster_id] = {}
+        clusters[cluster_id][nome] = tuple(coords[i])
+    
+    return clusters
+
+```
+
+### Definimos a função para extrair o grafo das ruas
+
+
+```python
+def obter_grafo_cluster(bares_cluster, modo='walk'):
+    """
+    Obtém o grafo de ruas para um cluster de bares
+    """
+    # Calcular centro do cluster
+    coords = list(bares_cluster.values())
+    center_lat = np.mean([c[0] for c in coords])
+    center_lon = np.mean([c[1] for c in coords])
+    
+    # Definir network_type baseado no modo
+    network_type = 'walk' if modo == 'walk' else 'drive'
+    
+    try:
+        # Baixar grafo ao redor do centro
+        G = ox.graph_from_point(
+            (center_lat, center_lon), 
+            dist=DISTANCIA_GRAFO, 
+            network_type=network_type,
+            simplify=True
+        )
+        print(f"      Grafo baixado: {len(G.nodes)} nós, {len(G.edges)} arestas")
+        return G
+    except Exception as e:
+        print(f"      ⚠️ Erro ao baixar grafo: {e}")
+        return None
+
+```
+
+### Definimos funções para cálculo de distâncias
+
+
+```python
+def calcular_distancias_reais(bares_cluster, G):
+    """
+    Calcula matriz de distâncias reais usando o grafo OSMnx
+    """
+    if G is None:
+        # Fallback para Haversine
+        print("Usando Haversine (fallback)")
+        return calcular_distancias_haversine(bares_cluster)
+    
+    nomes = list(bares_cluster.keys())
+    coords = list(bares_cluster.values())
+    n = len(coords)
+    
+    # Encontrar nós mais próximos para cada bar
+    nodes = []
+    for lat, lon in coords:
+        try:
+            node = ox.distance.nearest_nodes(G, lon, lat)
+            nodes.append(node)
+        except:
+            nodes.append(None)
+    
+    # Calcular matriz de distâncias
+    dist_matrix = np.zeros((n, n))
+    
+    for i in range(n):
+        for j in range(i+1, n):
+            if nodes[i] is not None and nodes[j] is not None:
+                try:
+                    # Distância real no grafo
+                    dist = nx.shortest_path_length(G, nodes[i], nodes[j], weight='length')
+                    dist_matrix[i, j] = dist
+                    dist_matrix[j, i] = dist
+                except:
+                    # Fallback para Haversine
+                    lat1, lon1 = coords[i]
+                    lat2, lon2 = coords[j]
+                    dist = haversine_distance(lat1, lon1, lat2, lon2)
+                    dist_matrix[i, j] = dist
+                    dist_matrix[j, i] = dist
+            else:
+                lat1, lon1 = coords[i]
+                lat2, lon2 = coords[j]
+                dist = haversine_distance(lat1, lon1, lat2, lon2)
+                dist_matrix[i, j] = dist
+                dist_matrix[j, i] = dist
+    
+    return dist_matrix
+
+def calcular_distancias_haversine(bares_cluster):
+    """
+    Calcula matriz de distâncias Haversine (fallback)
+    """
+    coords = list(bares_cluster.values())
+    n = len(coords)
+    dist_matrix = np.zeros((n, n))
+    
+    for i in range(n):
+        for j in range(i+1, n):
+            lat1, lon1 = coords[i]
+            lat2, lon2 = coords[j]
+            dist = haversine_distance(lat1, lon1, lat2, lon2)
+            dist_matrix[i, j] = dist
+            dist_matrix[j, i] = dist
+    
+    return dist_matrix
+
+```
+
+### Definimos a função para extrair a geometria da rota
+
+
+```python
+def obter_geometria_rota(bares_cluster, rota_indices, G):
+    """
+    Obtém a geometria completa da rota para visualização
+    """
+    if G is None:
+        return []
+    
+    nomes = list(bares_cluster.keys())
+    coords = list(bares_cluster.values())
+    
+    # Encontrar nós
+    nodes = []
+    for lat, lon in coords:
+        try:
+            node = ox.distance.nearest_nodes(G, lon, lat)
+            nodes.append(node)
+        except:
+            nodes.append(None)
+    
+    geometrias = []
+    for k in range(len(rota_indices)-1):
+        i = rota_indices[k]
+        j = rota_indices[k+1]
+        
+        if nodes[i] is not None and nodes[j] is not None:
+            try:
+                # Obter caminho mais curto
+                path = nx.shortest_path(G, nodes[i], nodes[j], weight='length')
+                # Converter para coordenadas
+                coords_path = [(G.nodes[n]['y'], G.nodes[n]['x']) for n in path]
+                geometrias.append(coords_path)
+            except:
+                # Fallback: linha reta
+                lat1, lon1 = coords[i]
+                lat2, lon2 = coords[j]
+                geometrias.append([[lat1, lon1], [lat2, lon2]])
+        else:
+            lat1, lon1 = coords[i]
+            lat2, lon2 = coords[j]
+            geometrias.append([[lat1, lon1], [lat2, lon2]])
+    
+    return geometrias
+
+```
+
+### Definimos a função para otimizar as rotas
+
+
+```python
+def otimizar_rota_cluster(bares_cluster, G):
+    """
+    Otimiza rota dentro de um cluster usando TSP
+    """
+    n = len(bares_cluster)
+    
+    if n <= 1:
+        nomes = list(bares_cluster.keys())
+        return nomes, 0.0, []
+    
+    # Calcular matriz de distâncias reais
+    dist_matrix = calcular_distancias_reais(bares_cluster, G)
+    
+    # TSP guloso
+    visitados = [0]
+    atual = 0
+    distancia_total = 0.0
+    
+    while len(visitados) < n:
+        melhor_dist = float('inf')
+        melhor_idx = -1
+        
+        for j in range(n):
+            if j not in visitados:
+                if dist_matrix[atual, j] < melhor_dist:
+                    melhor_dist = dist_matrix[atual, j]
+                    melhor_idx = j
+        
+        if melhor_idx != -1:
+            distancia_total += melhor_dist
+            visitados.append(melhor_idx)
+            atual = melhor_idx
+        else:
+            break
+    
+    # Obter geometria da rota
+    geometrias = obter_geometria_rota(bares_cluster, visitados, G)
+    
+    # Converter para nomes
+    nomes = list(bares_cluster.keys())
+    rota_ordenada = [nomes[i] for i in visitados]
+    
+    return rota_ordenada, distancia_total, geometrias
+
+```
+
+### Definimos a função para criar o mapa
+
+
+```python
+def criar_mapa_clusters(todos_clusters, rotas, distancias, geometrias, modo):
+    """
+    Cria mapa com múltiplos clusters e rotas reais
+    """
+    cores = {
+        0: '#e41a1c',  # vermelho
+        1: '#377eb8',  # azul
+        2: '#4daf4a',  # verde
+        3: '#984ea3',  # roxo
+        4: '#ff7f00',  # laranja
+        5: '#ffff33',  # amarelo
+        6: '#a65628',  # marrom
+        7: '#f781bf',  # rosa
+    }
+    
+    # Calcular centro do mapa
+    todas_coords = []
+    for cluster in todos_clusters.values():
+        for coord in cluster.values():
+            todas_coords.append(coord)
+    todas_coords = np.array(todas_coords)
+    center_lat = todas_coords[:, 0].mean()
+    center_lon = todas_coords[:, 1].mean()
+    
+    # Criar mapa base
+    mapa = folium.Map(location=[center_lat, center_lon], zoom_start=14, tiles='CartoDB positron')
+    folium.TileLayer('CartoDB dark_matter', name='Mapa Escuro', show=False).add_to(mapa)
+    
+    for cluster_id, bares in todos_clusters.items():
+        cor = cores.get(cluster_id, '#999999')
+        rota_nomes = rotas.get(cluster_id, [])
+        rota_geometrias = geometrias.get(cluster_id, [])
+        distancia = distancias.get(cluster_id, 0)
+        
+        fg = folium.FeatureGroup(name=f'Roteiro {cluster_id + 1} - {len(bares)} bares')
+        
+        # Adicionar rotas (seguindo ruas reais)
+        for geom in rota_geometrias:
+            if geom and len(geom) > 1:
+                folium.PolyLine(
+                    geom,
+                    color=cor,
+                    weight=4,
+                    opacity=0.8,
+                    popup=f'Trecho do Roteiro {cluster_id + 1}'
+                ).add_to(fg)
+        
+        # Adicionar marcadores
+        for idx, nome in enumerate(rota_nomes):
+            coord = bares[nome]
+            
+            if idx == 0:
+                cor_marcador = 'green'
+                icone = 'play'
+                tooltip = f"🏁 INÍCIO: {nome}"
+            elif idx == len(rota_nomes) - 1:
+                cor_marcador = 'red'
+                icone = 'stop'
+                tooltip = f"🏁 FIM: {nome}"
+            else:
+                cor_marcador = cores.get(cluster_id, 'blue')
+                icone = 'beer'
+                tooltip = nome
+            
+            popup_text = f"""
+            <div style="font-family: Arial; width: 220px;">
+                <b>{nome}</b><br>
+                📍 Parada {idx + 1} de {len(rota_nomes)}<br>
+                🍺 Roteiro {cluster_id + 1}<br>
+            </div>
+            """
+            
+            if idx == 0:
+                popup_text = f"""
+                <div style="font-family: Arial; width: 220px;">
+                    <b>{nome}</b><br>
+                    📍 Parada {idx + 1} de {len(rota_nomes)}<br>
+                    🍺 Roteiro {cluster_id + 1}<br>
+                    📏 Distância total: {distancia/1000:.2f} km<br>
+                    🚶 Modo: {modo.upper()}
+                </div>
+                """
+            
+            folium.Marker(
+                coord,
+                popup=folium.Popup(popup_text, max_width=300),
+                icon=folium.Icon(color=cor_marcador, icon=icone, prefix='fa'),
+                tooltip=tooltip
+            ).add_to(fg)
+        
+        fg.add_to(mapa)
+    
+    # Adicionar controles
+    folium.LayerControl().add_to(mapa)
+    MeasureControl().add_to(mapa)
+    Fullscreen().add_to(mapa)
+    
+    # Estatísticas totais
+    total_bares = sum(len(c) for c in todos_clusters.values())
+    total_distancia = sum(distancias.values())
+    tempo_estimado = total_distancia / (1.4 if modo == 'walk' else 8.3) / 60
+    
+    # Legenda
+    legenda_html = f'''
+    <div style="position: fixed; bottom: 10px; right: 10px; z-index: 1000;
+                background-color: white; padding: 12px; border-radius: 8px;
+                border: 2px solid #ff6b6b; font-family: 'Segoe UI', Arial, sans-serif;
+                font-size: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                max-width: 250px;">
+        <h4 style="margin:0 0 8px 0; color:#ff6b6b;">🍺 ROTEIROS POR PROXIMIDADE</h4>
+        <b>🚶 Modo:</b> {'PEDESTRE' if modo == 'walk' else 'CARRO'}<br>
+        <b>📍 Total de bares:</b> {total_bares}<br>
+        <b>🗺️ Número de roteiros:</b> {len(todos_clusters)}<br>
+        <b>📏 Distância total:</b> {total_distancia/1000:.2f} km<br>
+        <b>⏱️ Tempo estimado:</b> {tempo_estimado:.0f} min<br>
+        <hr style="margin: 5px 0;">
+        <small>
+        🟢 Verde: Início do roteiro<br>
+        🔴 Vermelho: Fim do roteiro<br>
+        🔵 Demais cores: diferentes roteiros<br>
+        📍 Clique nos marcadores para detalhes
+        </small>
+    </div>
+    '''
+    mapa.get_root().html.add_child(folium.Element(legenda_html))
+    
+    return mapa
+
+```
+
+### Execução final
+
+
+```python
+print(f"\n📊 Dados de entrada:")
+print(f"   Total de locais: {len(coordenadas_ordenadas)}")
+
+# 1. Clusterizar bares
+print(f"\n📊 Agrupando bares em {NUMERO_ROTEIROS} roteiros...")
+clusters = clusterizar_bares(coordenadas_ordenadas, n_clusters=NUMERO_ROTEIROS)
+
+# 2. Para cada cluster, otimizar rota
+print(f"\n🚀 Otimizando rotas com OSMnx (modo: {MODO_TRANSPORTE})...")
+todas_rotas = {}
+todas_distancias = {}
+todas_geometrias = {}
+todos_grafos = {}
+
+for cluster_id, bares in clusters.items():
+    print(f"\n   Roteiro {cluster_id + 1}: {len(bares)} bares")
+    
+    # Obter grafo de ruas para este cluster
+    G = obter_grafo_cluster(bares, modo=MODO_TRANSPORTE)
+    todos_grafos[cluster_id] = G
+    
+    # Otimizar rota
+    rota, distancia, geometrias = otimizar_rota_cluster(bares, G)
+    
+    todas_rotas[cluster_id] = rota
+    todas_distancias[cluster_id] = distancia
+    todas_geometrias[cluster_id] = geometrias
+    
+    print(f"      Distância total: {distancia/1000:.2f} km")
+    if len(rota) <= 5:
+        print(f"      Rota: {' → '.join(rota)}")
+    else:
+        print(f"      Rota: {' → '.join(rota[:3])} ... → {rota[-1]}")
+
+# 3. Criar mapa
+print(f"\n🗺️ Criando mapa interativo...")
+mapa_final = criar_mapa_clusters(
+    clusters, todas_rotas, todas_distancias, 
+    todas_geometrias, MODO_TRANSPORTE
+)
+
+# 4. Salvar mapa
+mapa_final.save('roteiros_osmnx_clusters.html')
+print(f"\n✅ Mapa salvo como 'roteiros_osmnx_clusters.html'")
+
+# 5. Relatório final
+print("\n" + "="*60)
+print("📋 RELATÓRIO FINAL")
+print("="*60)
+
+total_bares = sum(len(c) for c in clusters.values())
+total_distancia = sum(todas_distancias.values())
+
+print(f"\n📊 Resumo por roteiro:")
+for cluster_id in sorted(clusters.keys()):
+    print(f"   Roteiro {cluster_id + 1}: {len(clusters[cluster_id])} bares, "
+          f"{todas_distancias[cluster_id]/1000:.2f} km")
+
+print(f"\n📈 TOTAL:")
+print(f"   Total de bares: {total_bares}")
+print(f"   Total de roteiros: {len(clusters)}")
+print(f"   Distância total: {total_distancia/1000:.2f} km")
+
+print("\n🎉 ANÁLISE CONCLUÍDA!")
+
+# Exibir mapa (se estiver no Jupyter)
+#mapa_final
+```
+
+    
+    📊 Dados de entrada:
+       Total de locais: 40
+    
+    📊 Agrupando bares em 7 roteiros...
+    
+    🚀 Otimizando rotas com OSMnx (modo: drive)...
+    
+       Roteiro 5: 2 bares
+          Grafo baixado: 15785 nós, 37241 arestas
+          Distância total: 3.79 km
+          Rota: ADEGA BAR → RECANTO DOS MANACAS
+    
+       Roteiro 1: 9 bares
+          Grafo baixado: 15117 nós, 35371 arestas
+          Distância total: 8.48 km
+          Rota: EMPORIO DO SABOR → CASARAO BAR → SUPER LAZIN ... → BAR DU CHICO
+    
+       Roteiro 3: 7 bares
+          Grafo baixado: 14688 nós, 34238 arestas
+          Distância total: 6.36 km
+          Rota: BAR BATATA D'MOLA → BAR DO MARQUIM → REZA FORTE ... → BAR DO PASSARINHO
+    
+       Roteiro 4: 7 bares
+          Grafo baixado: 14494 nós, 33777 arestas
+          Distância total: 5.95 km
+          Rota: BAR DO ANTONIO → BAR DO JORGE → BUTECO DO PRINCIPE ... → PETISQUEIRA
+    
+       Roteiro 6: 7 bares
+          Grafo baixado: 14903 nós, 34840 arestas
+          Distância total: 4.91 km
+          Rota: BAR TORRESMO → BAR SANTA MODERACAO → IBITIBAR ... → BUTIQUIM DA FABRICA
+    
+       Roteiro 7: 5 bares
+          Grafo baixado: 15573 nós, 36439 arestas
+          Distância total: 4.77 km
+          Rota: BAR DU BUNECO → LERO LERO → BUDEGA DO PAPAI → BAR DIAS → COMPADRE GRILL COSTELARIA
+    
+       Roteiro 2: 3 bares
+          Grafo baixado: 15500 nós, 36101 arestas
+          Distância total: 0.95 km
+          Rota: NOSSO BAR JF → COLISEUM BAR → BAR DO BREJO
+    
+    🗺️ Criando mapa interativo...
+    
+    ✅ Mapa salvo como 'roteiros_osmnx_clusters.html'
+    
+    ============================================================
+    📋 RELATÓRIO FINAL
+    ============================================================
+    
+    📊 Resumo por roteiro:
+       Roteiro 1: 9 bares, 8.48 km
+       Roteiro 2: 3 bares, 0.95 km
+       Roteiro 3: 7 bares, 6.36 km
+       Roteiro 4: 7 bares, 5.95 km
+       Roteiro 5: 2 bares, 3.79 km
+       Roteiro 6: 7 bares, 4.91 km
+       Roteiro 7: 5 bares, 4.77 km
+    
+    📈 TOTAL:
+       Total de bares: 40
+       Total de roteiros: 7
+       Distância total: 35.23 km
+    
+    🎉 ANÁLISE CONCLUÍDA!
+
+
+### Visualizamos o mapa interativo
+
+
+```python
+# Exibir mapa
+#mapa_final
+```
+
+**Considerações finais**
+
+A sinergia entre as duas bibliotecas é evidente: o **OSMnx** prepara o cenário (baixa e modela o grafo), enquanto o **NetworkX** executa o roteiro (calcula caminhos e distâncias). Esta separação de responsabilidades confere grande flexibilidade à solução, pois permite substituir o motor de análise por outra biblioteca de grafos (como igraph) ou trocar a fonte dos dados geoespaciais sem reescrever toda a lógica de roteirização.
+
+As vantagens e desvantagens já discutidas permanecem válidas. A principal vantagem desta abordagem combinada é a autonomia operacional: uma vez baixado o grafo, todas as consultas de rota são realizadas localmente, sem dependência de servidores externos, latências de rede ou limites de requisições. Isso a torna ideal para aplicações que demandam milhares de consultas sobre a mesma região ou que precisam operar em ambientes sem conectividade estável com a internet.
+
+A desvantagem crítica, contudo, permanece sendo o custo computacional e de memória. Baixar um grafo viário de uma área urbana como Juiz de Fora pode consumir centenas de megabytes em RAM e exigir tempo considerável para download e processamento inicial, especialmente em conexões lentas ou hardware modesto. Em um equipamento com especificações limitadas, essa sobrecarga torna-se proibitiva para iterações rápidas, inviabilizando ajustes finos nos parâmetros de clusterização. Além disso, cada novo cluster ou região demandaria potencialmente um novo grafo, multiplicando o tempo de execução.
+
+Em síntese, enquanto o **OSMnx** + **NetworkX** oferecem a solução tecnicamente mais completa e autônoma para problemas de roteirização em escala, ela é a menos adequada para ambientes com restrições de hardware ou para uso esporádico, onde a leveza e a simplicidade de outras abordagens se mostram mais vantajosas.
+
+
+
+**Referências**
+
+Veness, C. *Calculate distance, bearing and more between Latitude/Longitude points*. Disponível em: https://www.movable-type.co.uk/scripts/latlong.html. Acesso em: 22/05/2026.
+
+OpenStreetMap Wiki. *Routing*. Disponível em: https://wiki.openstreetmap.org/wiki/Routing. Acesso em: 22/05/2026.
+
+Scikit-learn. *K-Means Clustering*. Disponível em: https://scikit-learn.org/stable/modules/clustering.html#k-means. Acesso em: 22/05/2026.
+
+Google. *OR-Tools: Traveling Salesperson Problem (**TSP**)*. Disponível em: https://developers.google.com/optimization/routing/tsp. Acesso em: 22/05/2026.
+
+University of Waterloo. ***TSP** Heuristics and Approximation Algorithms*. Disponível em: https://www.math.uwaterloo.ca/tsp/methods/index.html. Acesso em: 22/05/2026.
+
+OpenRouteService. *Directions **API** Documentation*. Disponível em: https://openrouteservice.org/dev/#/api-docs/v2/directions/{profile}/post. Acesso em: 22/05/2026.
+
+
+```python
+
+```
