@@ -814,7 +814,7 @@ A desvantagem crítica, contudo, permanece sendo o custo computacional e de mem�
 
 Em síntese, enquanto o **OSMnx** + **NetworkX** oferecem a solução tecnicamente mais completa e autônoma para problemas de roteirização em escala, ela é a menos adequada para ambientes com restrições de hardware ou para uso esporádico, onde a leveza e a simplicidade de outras abordagens se mostram mais vantajosas.
 
-O mapa interativo pode ser acessado em: https://guiajf.github.io/osmnx_networkx/.
+O mapa interativo pode ser acessado em: https://guiajf.github.io/roteirizador-osmnx/.
 
 
 
