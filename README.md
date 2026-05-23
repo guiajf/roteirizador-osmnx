@@ -6,7 +6,7 @@ Sobre o mesmo tema, publicamos um [artigo](https://github.com/guiajf/roteiro-but
 
 Nos próximos três artigos da série, a que damos início, intentamos que as rotas obedeçam à geometria das ruas, seguindo exatamente o traçado das vias. Para isso, exploramos inicialmente, as funcionalidades do pacote **Osmnx** em conjunto com **NetworkX** , depois a **API** do **OpenRouteService(ORS)** e finalmente a solução de roteamento **Open Source Routing Machine(OSRM)**.
 
-As vantagens do **Osmnx** são:  integração nativa com o **NetworkX** para análise de grafos, não exige chave **API**, oferece quantilidade ilimitada de requisições, possui precisão muito alta e fornece os modos de percurso *walk*, *drive* e *bike*. Além disso, com o *Osmnx* você baixa o grafo uma vez por *cluster* e reutiliza para todos os cálculos de distância e rotas, tornando o processo mais eficiente.
+As vantagens do **Osmnx** são:  integração nativa com o **NetworkX** para análise de grafos, não exige chave **API**, oferece quantidade ilimitada de requisições, possui precisão muito alta e fornece os modos de percurso *walk*, *drive* e *bike*. Além disso, com o **Osmnx** você baixa o grafo uma vez por *cluster* e reutiliza para todos os cálculos de distância e rotas, tornando o processo mais eficiente.
 
 Entretanto, o **Osmnx** é realmente pesado para máquinas com recursos limitados,  porque ele baixa e processa grafos inteiros de ruas (milhares de *nós* e *arestas*) na memória.
 
