@@ -824,6 +824,4 @@ University of Waterloo. ***TSP** Heuristics and Approximation Algorithms*. Dispo
 OpenRouteService. *Directions **API** Documentation*. Disponível em: https://openrouteservice.org/dev/#/api-docs/v2/directions/{profile}/post. Acesso em: 22/05/2026.
 
 
-```python
 
-```
