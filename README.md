@@ -2,7 +2,7 @@
 
 ### Introdução
 
-Sobre o mesmo tema, publicamos um [artigo](https://github.com/guiajf/roteiro-butecos) em que discorremos sobre o desenvolvimento de roteiros simplificados, calculados de acordo com a distância euclidiana ou de haversine, em linha reta, com técnicas apropriadas para a realização de agrupamentos baseados em proximidade geográfica e otimização baseada na variante aberta do *Problema do Caixeiro Viajante*.
+Sobre o mesmo tema, publicamos um [artigo](https://github.com/guiajf/roteiro-butecos) em que discorremos sobre o desenvolvimento de roteiros simplificados, calculados de acordo com a fórmula de *Haversine*, em linha reta, com técnicas apropriadas para a realização de agrupamentos baseados em proximidade geográfica e otimização baseada na variante aberta do *Problema do Caixeiro Viajante*.
 
 Nos próximos três artigos da série, a que damos início, intentamos que as rotas obedeçam à geometria das ruas, seguindo exatamente o traçado das vias. Para isso, exploramos inicialmente, as funcionalidades do pacote **Osmnx** em conjunto com **NetworkX** , depois a **API** do **OpenRouteService(ORS)** e finalmente a solução de roteamento **Open Source Routing Machine(OSRM)**.
 
