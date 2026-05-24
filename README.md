@@ -811,17 +811,18 @@ O mapa interativo pode ser acessado em: https://guiajf.github.io/roteirizador-os
 
 **Referências**
 
-Veness, C. *Calculate distance, bearing and more between Latitude/Longitude points*. Disponível em: https://www.movable-type.co.uk/scripts/latlong.html. Acesso em: 22/05/2026.
+Google. *OR-Tools: Traveling Salesperson Problem (**TSP**)*. Disponível em: https://developers.google.com/optimization/routing/tsp. Acesso em: 22/05/2026.
+
+OpenRouteService. *Directions **API** Documentation*. Disponível em: https://openrouteservice.org/dev/#/api-docs/v2/directions/{profile}/post. Acesso em: 22/05/2026.
 
 OpenStreetMap Wiki. *Routing*. Disponível em: https://wiki.openstreetmap.org/wiki/Routing. Acesso em: 22/05/2026.
 
 Scikit-learn. *K-Means Clustering*. Disponível em: https://scikit-learn.org/stable/modules/clustering.html#k-means. Acesso em: 22/05/2026.
 
-Google. *OR-Tools: Traveling Salesperson Problem (**TSP**)*. Disponível em: https://developers.google.com/optimization/routing/tsp. Acesso em: 22/05/2026.
-
 University of Waterloo. ***TSP** Heuristics and Approximation Algorithms*. Disponível em: https://www.math.uwaterloo.ca/tsp/methods/index.html. Acesso em: 22/05/2026.
 
-OpenRouteService. *Directions **API** Documentation*. Disponível em: https://openrouteservice.org/dev/#/api-docs/v2/directions/{profile}/post. Acesso em: 22/05/2026.
+Veness, C. *Calculate distance, bearing and more between Latitude/Longitude points*. Disponível em: https://www.movable-type.co.uk/scripts/latlong.html. Acesso em: 22/05/2026.
+
 
 
 
