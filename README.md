@@ -811,17 +811,29 @@ O mapa interativo pode ser acessado em: https://guiajf.github.io/roteirizador-os
 
 **Referências**
 
-Google. *OR-Tools: Traveling Salesperson Problem (**TSP**)*. Disponível em: https://developers.google.com/optimization/routing/tsp. Acesso em: 22/05/2026.
+Bullock, R. *Great Circle Distances and Bearings Between Two Locations*, 2007. Disponível em: https://dtcenter.org/sites/default/files/community-code/met/docs/write-ups/gc_simple.pdf. Acesso em: 24 de maio 2026.
 
-OpenRouteService. *Directions **API** Documentation*. Disponível em: https://openrouteservice.org/dev/#/api-docs/v2/directions/{profile}/post. Acesso em: 22/05/2026.
+**Folium**. *Quickstart*. Folium Documentation, 2025. Disponível em: https://python-visualization.github.io/folium/latest/. Acesso em: 24 maio 2026.
 
-OpenStreetMap Wiki. *Routing*. Disponível em: https://wiki.openstreetmap.org/wiki/Routing. Acesso em: 22/05/2026.
+Frieze, Alan; Pegden, Wesley. *The bright side of simple heuristics for the TSP*. Electronic Journal of Combinatorics, v. 31, n. 4, 5 p., 2024. DOI: 10.37236/12651. Disponível em: https://www.math.cmu.edu/~af1p/Texfiles/TSPheuristics.pdf. Acesso em: 24 maio 2026.
 
-Scikit-learn. *K-Means Clustering*. Disponível em: https://scikit-learn.org/stable/modules/clustering.html#k-means. Acesso em: 22/05/2026.
+Hagberg, A.; Swart, P.; Schelte, D. *Exploring network structure, dynamics, and function using NetworkX*. In: Python in Science Conference, 7., 2008, Pasadena. Proceedings... Pasadena: SciPy, 2008. p. 11-15. Disponível em: https://proceedings.scipy.org/articles/TCWV9851.pdf. Acesso em: 22 maio 2026.
 
-University of Waterloo. ***TSP** Heuristics and Approximation Algorithms*. Disponível em: https://www.math.uwaterloo.ca/tsp/methods/index.html. Acesso em: 22/05/2026.
+Jünger, Michael; Reinelt, Gerhard; Rinaldi, Giovanni. *The Traveling Salesman Problem*. Köln: Universität zu Köln, Institut für Angewandte Mathematik und Informatik, fev. 1994. (Report No. 92.113). Disponível em: https://kups.ub.uni-koeln.de/54671/1/rep-92.113-koeln.pdf. Acesso em: 24 maio 2026.
 
-Veness, C. *Calculate distance, bearing and more between Latitude/Longitude points*. Disponível em: https://www.movable-type.co.uk/scripts/latlong.html. Acesso em: 22/05/2026.
+Luu, Quang Trung; Aibin, Michal. *Traveling Salesman Problem: Exact Solutions vs. Heuristic vs. Approximation Algorithms*. Baeldung, 2024. Disponível em: https://www.baeldung.com/cs/tsp-exact-solutions-vs-heuristic-vs-approximation-algorithms. Acesso em: 24 maio 2026.
+
+**OpenRouteService**. *Directions API*. OpenRouteService Developer Portal, Heidelberg, 2026. Disponível em: https://openrouteservice.org/dev/#/api-docs/v2/directions/{profile}/post. Acesso em: 24 maio 2026.
+
+**OpenStreetMap**. *Routing*. OpenStreetMap Wiki, 2026. Disponível em: https://wiki.openstreetmap.org/wiki/Routing. Acesso em: 24 maio 2026
+
+Rego, César et al. *Traveling salesman problem heuristics: leading methods, implementations and latest advances*. European Journal of Operational Research, Amsterdam, n. 211, p. 427-441, 2011. Disponível em: https://leeds-faculty.colorado.edu/glover/fred%20pubs/429%20-%20TSP%20-%20problem%20heuristics%20-%20leading%20methods,%20implementations,%20latest%20advances.pdf. Acesso em: 24 maio 29026.
+
+**Scikit-Learn**. *K-means clustering*. Scikit-learn Documentation, 2026. Disponível em: https://scikit-learn.org/stable/modules/clustering.html#k-means. Acesso em: 24 maio 2026.
+
+University of Waterloo. *TSP heuristics and approximation algorithms*. Combinatorial Optimization Group, Waterloo, 2007. Disponível em: https://www.math.uwaterloo.ca/tsp/methods/. Acesso em: 24 maio 2026.
+
+Veness, C. *Calculate distance, bearing and more between latitude/longitude points*, 2024. Disponível em: https://www.movable-type.co.uk/scripts/latlong.html. Acesso em: 24 maio 2026.
 
 
 
