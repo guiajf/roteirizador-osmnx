@@ -835,7 +835,7 @@ Rego, César et al. *Traveling salesman problem heuristics: leading methods, imp
 
 **Scikit-Learn**. *K-means clustering*. Scikit-learn Documentation, 2026. Disponível em: https://scikit-learn.org/stable/modules/clustering.html#k-means. Acesso em: 24 maio 2026.
 
-Veness, C. *Calculate distance, bearing and more between latitude/longitude points*, 2024. Disponível em: https://www.movable-type.co.uk/scripts/latlong.html. Acesso em: 24 maio 2026.
+Veness, Chris. *Calculate distance, bearing and more between latitude/longitude points*, 2022. Disponível em: https://www.movable-type.co.uk/scripts/latlong.html. Acesso em: 24 maio 2026.
 
 
 
